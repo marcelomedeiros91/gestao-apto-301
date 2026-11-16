@@ -1,0 +1,2106 @@
+<!DOCTYPE html>
+<html lang="pt-BR" class="scroll-smooth">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
+  <title>Apto 301 • Gestão de Financiamento, Reforma & Móveis</title>
+  <!-- Tailwind CSS -->
+  <script src="https://cdn.tailwindcss.com"></script>
+  <!-- Font Inter -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+  <!-- Phosphor Icons -->
+  <script src="https://unpkg.com/@phosphor-icons/web"></script>
+
+  <script>
+    tailwind.config = {
+      darkMode: 'class',
+      theme: {
+        extend: {
+          fontFamily: {
+            sans: ['Inter', 'sans-serif'],
+          },
+          colors: {
+            brand: {
+              50: '#ecfdf5',
+              100: '#d1fae5',
+              500: '#10b981',
+              600: '#059669',
+              700: '#047857',
+            }
+          }
+        }
+      }
+    }
+  </script>
+
+  <style>
+    body {
+      font-family: 'Inter', sans-serif;
+      -webkit-tap-highlight-color: transparent;
+    }
+    /* Custom Scrollbar */
+    ::-webkit-scrollbar {
+      width: 6px;
+      height: 6px;
+    }
+    ::-webkit-scrollbar-track {
+      background: rgba(15, 23, 42, 0.05);
+    }
+    ::-webkit-scrollbar-thumb {
+      background: rgba(100, 116, 139, 0.35);
+      border-radius: 9999px;
+    }
+    .no-scrollbar::-webkit-scrollbar {
+      display: none;
+    }
+    .no-scrollbar {
+      -ms-overflow-style: none;
+      scrollbar-width: none;
+    }
+  </style>
+</head>
+<body class="bg-slate-50 text-slate-800 dark:bg-slate-950 dark:text-slate-100 min-h-screen pb-24 md:pb-12 transition-colors duration-200">
+
+  <!-- TOP HEADER -->
+  <header class="sticky top-0 z-30 bg-white/90 dark:bg-slate-900/90 backdrop-blur-md border-b border-slate-200 dark:border-slate-800">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 h-16 flex items-center justify-between gap-2">
+      <!-- Brand -->
+      <div class="flex items-center gap-3">
+        <div class="w-10 h-10 rounded-xl bg-gradient-to-br from-emerald-500 to-teal-700 flex items-center justify-center text-white shadow-md shadow-emerald-600/20">
+          <i class="ph-fill ph-buildings text-xl"></i>
+        </div>
+        <div>
+          <div class="flex items-center gap-2">
+            <h1 class="font-bold text-base sm:text-lg tracking-tight leading-none">Gestão Apto 301</h1>
+            <span id="syncStatusBadge" class="inline-flex items-center gap-1 px-2 py-0.5 rounded-full text-[11px] font-medium bg-emerald-50 text-emerald-700 dark:bg-emerald-950/80 dark:text-emerald-300 border border-emerald-200 dark:border-emerald-800">
+              <span class="w-1.5 h-1.5 rounded-full bg-emerald-500"></span>
+              Salvo Local
+            </span>
+          </div>
+          <p class="text-xs text-slate-500 dark:text-slate-400 hidden sm:block mt-0.5">
+            Controle de Financiamento, Amortizações, Reformas e Inventário de Móveis/Eletros
+          </p>
+        </div>
+      </div>
+
+      <!-- Desktop Navigation Tabs -->
+      <nav class="hidden md:flex items-center bg-slate-100 dark:bg-slate-800/80 p-1 rounded-xl border border-slate-200/70 dark:border-slate-700/60">
+        <button onclick="switchMainTab('imovel')" id="deskTab-imovel" class="main-tab-btn px-4 py-1.5 rounded-lg text-sm font-semibold transition-all flex items-center gap-2">
+          <i class="ph-bold ph-house-line"></i>
+          1. Imóvel & Financiamento
+        </button>
+        <button onclick="switchMainTab('moveis')" id="deskTab-moveis" class="main-tab-btn px-4 py-1.5 rounded-lg text-sm font-semibold transition-all flex items-center gap-2">
+          <i class="ph-bold ph-couch"></i>
+          2. Móveis & Eletros
+        </button>
+        <button onclick="switchMainTab('resumo')" id="deskTab-resumo" class="main-tab-btn px-4 py-1.5 rounded-lg text-sm font-semibold transition-all flex items-center gap-2">
+          <i class="ph-bold ph-chart-pie-slice"></i>
+          3. Visão Consolidada
+        </button>
+      </nav>
+
+      <!-- Action Buttons -->
+      <div class="flex items-center gap-1.5 sm:gap-2">
+        <button onclick="openCloudModal()" class="px-3 py-2 rounded-xl text-xs sm:text-sm font-semibold bg-indigo-50 hover:bg-indigo-100 text-indigo-700 dark:bg-indigo-950/70 dark:hover:bg-indigo-900/80 dark:text-indigo-300 border border-indigo-200/80 dark:border-indigo-800/70 flex items-center gap-1.5 transition" title="Vincular Google Sheets / GitHub">
+          <i class="ph-bold ph-cloud-arrow-up text-base"></i>
+          <span class="hidden sm:inline">Nuvem / GitHub</span>
+        </button>
+
+        <button onclick="openBackupModal()" class="p-2 rounded-xl text-slate-600 hover:text-slate-900 hover:bg-slate-100 dark:text-slate-300 dark:hover:bg-slate-800 border border-slate-200 dark:border-slate-800 transition" title="Exportar / Importar Backup">
+          <i class="ph-bold ph-download-simple text-lg"></i>
+        </button>
+
+        <button onclick="toggleDarkMode()" class="p-2 rounded-xl text-slate-600 hover:text-slate-900 hover:bg-slate-100 dark:text-slate-300 dark:hover:bg-slate-800 border border-slate-200 dark:border-slate-800 transition" title="Alternar Tema Claro/Escuro">
+          <i id="themeIcon" class="ph-bold ph-moon text-lg"></i>
+        </button>
+      </div>
+    </div>
+  </header>
+
+  <!-- MAIN CONTAINER -->
+  <main class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 pt-6 space-y-6">
+
+    <!-- =================================================================== -->
+    <!-- ABA 1: IMÓVEL, FINANCIAMENTO, COMPRA E REFORMAS FIXAS (PLANILHA 1)  -->
+    <!-- =================================================================== -->
+    <section id="view-imovel" class="space-y-6">
+      
+      <!-- Banner Explicativo + Botão Editar Contrato -->
+      <div class="bg-gradient-to-r from-slate-900 via-slate-800 to-emerald-950 text-white rounded-2xl p-5 sm:p-6 shadow-lg border border-slate-800">
+        <div class="flex flex-col lg:flex-row lg:items-center lg:justify-between gap-4">
+          <div class="space-y-1">
+            <div class="inline-flex items-center gap-2 px-2.5 py-1 rounded-full bg-emerald-500/20 border border-emerald-400/30 text-emerald-300 text-xs font-semibold">
+              <i class="ph-fill ph-key"></i>
+              PARTE 1 • CUSTO DO IMÓVEL & FINANCIAMENTO (FICA NO APTO)
+            </div>
+            <h2 class="text-xl sm:text-2xl font-extrabold tracking-tight">Financiamento, Compra & Melhorias Fixas</h2>
+            <p class="text-xs sm:text-sm text-slate-300 max-w-2xl">
+              Acompanhe todas as parcelas mensais pagas, amortizações de prazo, entrada, taxas de cartório/ITBI e reformas fixas que valorizam e permanecem no apartamento.
+            </p>
+          </div>
+          <div class="flex flex-wrap items-center gap-2.5">
+            <button onclick="openConfigModal()" class="px-3.5 py-2 rounded-xl bg-white/10 hover:bg-white/20 text-white text-xs sm:text-sm font-semibold border border-white/15 flex items-center gap-2 transition">
+              <i class="ph-bold ph-Sliders"></i>
+              Editar Dados do Contrato
+            </button>
+            <div class="px-4 py-2 rounded-xl bg-emerald-500/20 border border-emerald-400/30">
+              <span class="block text-[11px] uppercase tracking-wider text-emerald-200 font-semibold">Total Já Desembolsado no Imóvel</span>
+              <span id="kpiTotalPagoImovel" class="text-lg sm:text-xl font-black text-emerald-300">R$ 147.367,52</span>
+            </div>
+          </div>
+        </div>
+
+        <!-- Barra de Progresso das 360 Parcelas -->
+        <div class="mt-6 pt-5 border-t border-white/10">
+          <div class="flex flex-col sm:flex-row sm:items-end justify-between gap-2 mb-2">
+            <div>
+              <span class="text-xs uppercase tracking-wider text-slate-300 font-semibold block">Progresso de Quitação do Prazo (Parcelas)</span>
+              <div class="flex items-baseline gap-2 mt-0.5">
+                <span id="kpiParcelasEliminadas" class="text-2xl font-extrabold text-white">82</span>
+                <span class="text-sm text-slate-300">de <strong id="kpiTotalParcelasContrato">360</strong> parcelas quitadas</span>
+                <span id="kpiPercentualPrazo" class="px-2 py-0.5 text-xs font-bold rounded-md bg-emerald-500/20 text-emerald-300 border border-emerald-400/30">22,8%</span>
+              </div>
+            </div>
+            <div class="flex flex-wrap items-center gap-3 text-xs">
+              <span class="flex items-center gap-1.5 text-emerald-300 font-medium">
+                <span class="w-2.5 h-2.5 rounded-full bg-emerald-400 inline-block"></span>
+                Pagas no mês: <strong id="barLabelPagas">12</strong>
+              </span>
+              <span class="flex items-center gap-1.5 text-cyan-300 font-medium">
+                <span class="w-2.5 h-2.5 rounded-full bg-cyan-400 inline-block"></span>
+                Amortizadas: <strong id="barLabelAmortizadas">70</strong>
+              </span>
+              <span class="flex items-center gap-1.5 text-amber-300 font-semibold bg-amber-500/15 px-2.5 py-1 rounded-lg border border-amber-400/30">
+                <i class="ph-bold ph-hourglass-high"></i>
+                Faltam: <strong id="barLabelRestantes">278 parcelas</strong>
+              </span>
+            </div>
+          </div>
+          <!-- Progress Track -->
+          <div class="w-full h-3.5 bg-slate-800 rounded-full overflow-hidden flex p-0.5 border border-slate-700">
+            <div id="progressPagas" class="bg-emerald-400 h-full rounded-l-full transition-all duration-500" style="width: 3.33%"></div>
+            <div id="progressAmortizadas" class="bg-cyan-400 h-full transition-all duration-500" style="width: 19.44%"></div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Cards do Resumo do Financiamento e Gastos do Imóvel -->
+      <div class="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-6 gap-3 sm:gap-4">
+        <!-- Valor de Venda / Financiado -->
+        <div class="bg-white dark:bg-slate-900 p-4 rounded-2xl border border-slate-200/80 dark:border-slate-800 shadow-sm">
+          <div class="flex items-center justify-between text-slate-400 mb-1">
+            <span class="text-[11px] font-bold uppercase tracking-wider">Valor de Compra</span>
+            <i class="ph-duotone ph-tag text-lg text-slate-500"></i>
+          </div>
+          <p id="cardValorVenda" class="text-base sm:text-lg font-extrabold text-slate-900 dark:text-white">R$ 290.000,00</p>
+          <p class="text-[11px] text-slate-500 dark:text-slate-400 mt-1">
+            Financiado: <strong id="cardValorFinanciado">R$ 211.409,32</strong>
+          </p>
+        </div>
+
+        <!-- Entrada + FGTS -->
+        <div class="bg-white dark:bg-slate-900 p-4 rounded-2xl border border-slate-200/80 dark:border-slate-800 shadow-sm">
+          <div class="flex items-center justify-between text-slate-400 mb-1">
+            <span class="text-[11px] font-bold uppercase tracking-wider">Entrada + FGTS</span>
+            <i class="ph-duotone ph-hand-coins text-lg text-emerald-500"></i>
+          </div>
+          <p id="cardEntradaMaisFgts" class="text-base sm:text-lg font-extrabold text-slate-900 dark:text-white">R$ 80.000,00</p>
+          <p class="text-[11px] text-slate-500 dark:text-slate-400 mt-1">
+            <span id="cardDetalheEntrada">R$ 65.000</span> + FGTS <span id="cardDetalheFgts">R$ 15.000</span>
+          </p>
+        </div>
+
+        <!-- Parcelas Pagas -->
+        <div class="bg-white dark:bg-slate-900 p-4 rounded-2xl border border-slate-200/80 dark:border-slate-800 shadow-sm">
+          <div class="flex items-center justify-between text-slate-400 mb-1">
+            <span class="text-[11px] font-bold uppercase tracking-wider">Parcelas Pagas</span>
+            <i class="ph-duotone ph-calendar-check text-lg text-emerald-500"></i>
+          </div>
+          <p id="cardSomaParcelas" class="text-base sm:text-lg font-extrabold text-emerald-600 dark:text-emerald-400">R$ 30.432,91</p>
+          <p class="text-[11px] text-slate-500 dark:text-slate-400 mt-1">
+            <strong id="cardQtdParcelasPagas">12</strong> parcelas mensais
+          </p>
+        </div>
+
+        <!-- Amortizações -->
+        <div class="bg-white dark:bg-slate-900 p-4 rounded-2xl border border-slate-200/80 dark:border-slate-800 shadow-sm">
+          <div class="flex items-center justify-between text-slate-400 mb-1">
+            <span class="text-[11px] font-bold uppercase tracking-wider">Amortizado</span>
+            <i class="ph-duotone ph-trend-down text-lg text-cyan-500"></i>
+          </div>
+          <p id="cardSomaAmortizacoes" class="text-base sm:text-lg font-extrabold text-cyan-600 dark:text-cyan-400">R$ 11.769,00</p>
+          <p class="text-[11px] text-slate-500 dark:text-slate-400 mt-1">
+            <strong id="cardQtdAmortizadas">70</strong> parc. (Méd: <span id="cardMediaAmortizacao">R$ 168,13</span>)
+          </p>
+        </div>
+
+        <!-- Documentação / Compra -->
+        <div class="bg-white dark:bg-slate-900 p-4 rounded-2xl border border-slate-200/80 dark:border-slate-800 shadow-sm">
+          <div class="flex items-center justify-between text-slate-400 mb-1">
+            <span class="text-[11px] font-bold uppercase tracking-wider">Taxas & Compra</span>
+            <i class="ph-duotone ph-file-text text-lg text-amber-500"></i>
+          </div>
+          <p id="cardSomaOutrosCompra" class="text-base sm:text-lg font-extrabold text-slate-900 dark:text-white">R$ 20.249,51</p>
+          <p class="text-[11px] text-slate-500 dark:text-slate-400 mt-1">
+            ITBI, Cartório, Caixa, etc.
+          </p>
+        </div>
+
+        <!-- Reformas & Melhorias Fixas -->
+        <div class="bg-white dark:bg-slate-900 p-4 rounded-2xl border border-slate-200/80 dark:border-slate-800 shadow-sm">
+          <div class="flex items-center justify-between text-slate-400 mb-1">
+            <span class="text-[11px] font-bold uppercase tracking-wider">Reformas Fixas</span>
+            <i class="ph-duotone ph-hammer text-lg text-purple-500"></i>
+          </div>
+          <p id="cardSomaReformas" class="text-base sm:text-lg font-extrabold text-purple-600 dark:text-purple-400">R$ 4.916,10</p>
+          <p class="text-[11px] text-slate-500 dark:text-slate-400 mt-1">
+            Ficam no Apto (<span id="cardQtdReformas">10</span> itens)
+          </p>
+        </div>
+      </div>
+
+      <!-- Sub-navegação interna da Parte 1 -->
+      <div class="flex items-center gap-2 overflow-x-auto no-scrollbar pb-1 border-b border-slate-200 dark:border-slate-800">
+        <button onclick="switchImovelSubTab('parcelas')" id="subTab-parcelas" class="imovel-subtab px-4 py-2.5 rounded-xl text-xs sm:text-sm font-bold whitespace-nowrap transition flex items-center gap-2">
+          <i class="ph-bold ph-calendar-check"></i>
+          Parcelas & Amortizações
+        </button>
+        <button onclick="switchImovelSubTab('compra')" id="subTab-compra" class="imovel-subtab px-4 py-2.5 rounded-xl text-xs sm:text-sm font-bold whitespace-nowrap transition flex items-center gap-2">
+          <i class="ph-bold ph-Stamp"></i>
+          Entrada & Taxas de Compra
+        </button>
+        <button onclick="switchImovelSubTab('reformas')" id="subTab-reformas" class="imovel-subtab px-4 py-2.5 rounded-xl text-xs sm:text-sm font-bold whitespace-nowrap transition flex items-center gap-2">
+          <i class="ph-bold ph-paint-roller"></i>
+          Reformas & Melhorias (Planilha 1)
+        </button>
+      </div>
+
+      <!-- SUB-ABA 1.1: PARCELAS PAGAS & AMORTIZAÇÕES LADO A LADO -->
+      <div id="subView-parcelas" class="grid grid-cols-1 lg:grid-cols-2 gap-6">
+        
+        <!-- Coluna Esquerda: Parcelas Mensais Pagas -->
+        <div class="bg-white dark:bg-slate-900 rounded-2xl border border-slate-200 dark:border-slate-800 shadow-sm overflow-hidden flex flex-col">
+          <div class="p-4 sm:p-5 border-b border-slate-200 dark:border-slate-800 flex items-center justify-between gap-2 bg-slate-50/50 dark:bg-slate-900/50">
+            <div>
+              <div class="flex items-center gap-2">
+                <span class="w-2.5 h-2.5 rounded-full bg-emerald-500"></span>
+                <h3 class="font-bold text-base">Parcelas Mensais Pagas</h3>
+              </div>
+              <p class="text-xs text-slate-500 dark:text-slate-400 mt-0.5">
+                Boletos mensais do financiamento Caixa
+              </p>
+            </div>
+            <button onclick="openItemModal('parcelasPagas')" class="px-3.5 py-2 rounded-xl bg-emerald-600 hover:bg-emerald-700 text-white text-xs font-bold flex items-center gap-1.5 shadow-sm transition">
+              <i class="ph-bold ph-plus"></i>
+              Nova Parcela
+            </button>
+          </div>
+
+          <div class="overflow-x-auto flex-1">
+            <table class="w-full text-left border-collapse">
+              <thead>
+                <tr class="border-b border-slate-200 dark:border-slate-800 text-[11px] font-bold uppercase text-slate-400 bg-slate-50/80 dark:bg-slate-950/40">
+                  <th class="py-3 px-4">#</th>
+                  <th class="py-3 px-4">Data</th>
+                  <th class="py-3 px-4 text-center">Qtd</th>
+                  <th class="py-3 px-4 text-right">Valor Pago</th>
+                  <th class="py-3 px-4 text-right">Ações</th>
+                </tr>
+              </thead>
+              <tbody id="tbodyParcelasPagas" class="divide-y divide-slate-200/70 dark:divide-slate-800 text-sm"></tbody>
+              <tfoot>
+                <tr class="bg-emerald-50/70 dark:bg-emerald-950/30 font-bold text-slate-900 dark:text-white border-t-2 border-emerald-200 dark:border-emerald-900">
+                  <td colspan="2" class="py-3 px-4 text-xs uppercase">Total Parcelas Pagas</td>
+                  <td id="tfootParcelasQtd" class="py-3 px-4 text-center text-emerald-700 dark:text-emerald-300">12</td>
+                  <td id="tfootParcelasValor" class="py-3 px-4 text-right text-emerald-700 dark:text-emerald-300">R$ 30.432,91</td>
+                  <td></td>
+                </tr>
+              </tfoot>
+            </table>
+          </div>
+        </div>
+
+        <!-- Coluna Direita: Parcelas Amortizadas -->
+        <div class="bg-white dark:bg-slate-900 rounded-2xl border border-slate-200 dark:border-slate-800 shadow-sm overflow-hidden flex flex-col">
+          <div class="p-4 sm:p-5 border-b border-slate-200 dark:border-slate-800 flex items-center justify-between gap-2 bg-slate-50/50 dark:bg-slate-900/50">
+            <div>
+              <div class="flex items-center gap-2">
+                <span class="w-2.5 h-2.5 rounded-full bg-cyan-500"></span>
+                <h3 class="font-bold text-base">Parcelas Amortizadas</h3>
+              </div>
+              <p class="text-xs text-slate-500 dark:text-slate-400 mt-0.5">
+                Abatimento extraordinário de prazo (últimas parcelas)
+              </p>
+            </div>
+            <button onclick="openItemModal('amortizacoes')" class="px-3.5 py-2 rounded-xl bg-cyan-600 hover:bg-cyan-700 text-white text-xs font-bold flex items-center gap-1.5 shadow-sm transition">
+              <i class="ph-bold ph-plus"></i>
+              Nova Amortização
+            </button>
+          </div>
+
+          <div class="overflow-x-auto flex-1">
+            <table class="w-full text-left border-collapse">
+              <thead>
+                <tr class="border-b border-slate-200 dark:border-slate-800 text-[11px] font-bold uppercase text-slate-400 bg-slate-50/80 dark:bg-slate-950/40">
+                  <th class="py-3 px-4">Data</th>
+                  <th class="py-3 px-4 text-center">Qtd Abatida</th>
+                  <th class="py-3 px-4 text-right">Valor Pago</th>
+                  <th class="py-3 px-4 text-right">Média / Parc.</th>
+                  <th class="py-3 px-4 text-right">Ações</th>
+                </tr>
+              </thead>
+              <tbody id="tbodyAmortizacoes" class="divide-y divide-slate-200/70 dark:divide-slate-800 text-sm"></tbody>
+              <tfoot>
+                <tr class="bg-cyan-50/70 dark:bg-cyan-950/30 font-bold text-slate-900 dark:text-white border-t-2 border-cyan-200 dark:border-cyan-900">
+                  <td class="py-3 px-4 text-xs uppercase">Total Amortizado</td>
+                  <td id="tfootAmortQtd" class="py-3 px-4 text-center text-cyan-700 dark:text-cyan-300">70</td>
+                  <td id="tfootAmortValor" class="py-3 px-4 text-right text-cyan-700 dark:text-cyan-300">R$ 11.769,00</td>
+                  <td id="tfootAmortMedia" class="py-3 px-4 text-right text-xs text-cyan-700 dark:text-cyan-300">R$ 168,13</td>
+                  <td></td>
+                </tr>
+              </tfoot>
+            </table>
+          </div>
+        </div>
+
+      </div>
+
+      <!-- SUB-ABA 1.2: ENTRADA DETALHADA & OUTROS GASTOS NA COMPRA -->
+      <div id="subView-compra" class="hidden grid grid-cols-1 lg:grid-cols-12 gap-6">
+        
+        <!-- Detalhamento da Entrada (5 cols) -->
+        <div class="lg:col-span-5 bg-white dark:bg-slate-900 rounded-2xl border border-slate-200 dark:border-slate-800 shadow-sm overflow-hidden flex flex-col">
+          <div class="p-4 sm:p-5 border-b border-slate-200 dark:border-slate-800 flex items-center justify-between gap-2 bg-slate-50/50 dark:bg-slate-900/50">
+            <div>
+              <h3 class="font-bold text-base">Pagamentos da Entrada</h3>
+              <p class="text-xs text-slate-500 dark:text-slate-400 mt-0.5">Comissões e transferências ao proprietário</p>
+            </div>
+            <button onclick="openItemModal('entradaItens')" class="px-3 py-2 rounded-xl bg-slate-800 hover:bg-slate-700 dark:bg-slate-700 dark:hover:bg-slate-600 text-white text-xs font-bold flex items-center gap-1.5 transition">
+              <i class="ph-bold ph-plus"></i>
+              Adicionar
+            </button>
+          </div>
+          <div class="overflow-x-auto flex-1">
+            <table class="w-full text-left border-collapse">
+              <thead>
+                <tr class="border-b border-slate-200 dark:border-slate-800 text-[11px] font-bold uppercase text-slate-400 bg-slate-50/80 dark:bg-slate-950/40">
+                  <th class="py-3 px-4">Descrição</th>
+                  <th class="py-3 px-3">Data</th>
+                  <th class="py-3 px-4 text-right">Valor</th>
+                  <th class="py-3 px-3 text-right">Ações</th>
+                </tr>
+              </thead>
+              <tbody id="tbodyEntradaItens" class="divide-y divide-slate-200/70 dark:divide-slate-800 text-sm"></tbody>
+              <tfoot>
+                <tr class="bg-slate-100/80 dark:bg-slate-800/60 font-bold text-sm">
+                  <td colspan="2" class="py-3 px-4 text-xs uppercase">Total Entrada (Recursos Próprios)</td>
+                  <td id="tfootEntradaValor" class="py-3 px-4 text-right text-emerald-600 dark:text-emerald-400">R$ 65.000,00</td>
+                  <td></td>
+                </tr>
+              </tfoot>
+            </table>
+          </div>
+        </div>
+
+        <!-- Outros Gastos na Compra: ITBI, Cartório, Taxas (7 cols) -->
+        <div class="lg:col-span-7 bg-white dark:bg-slate-900 rounded-2xl border border-slate-200 dark:border-slate-800 shadow-sm overflow-hidden flex flex-col">
+          <div class="p-4 sm:p-5 border-b border-slate-200 dark:border-slate-800 flex items-center justify-between gap-2 bg-slate-50/50 dark:bg-slate-900/50">
+            <div>
+              <h3 class="font-bold text-base">Outros Gastos na Compra (Documentação & Taxas)</h3>
+              <p class="text-xs text-slate-500 dark:text-slate-400 mt-0.5">ITBI, Registro em Cartório, Laudo Caixa, Despachante e afins</p>
+            </div>
+            <button onclick="openItemModal('outrosGastosCompra')" class="px-3.5 py-2 rounded-xl bg-amber-600 hover:bg-amber-700 text-white text-xs font-bold flex items-center gap-1.5 transition">
+              <i class="ph-bold ph-plus"></i>
+              Novo Gasto
+            </button>
+          </div>
+          <div class="overflow-x-auto flex-1">
+            <table class="w-full text-left border-collapse">
+              <thead>
+                <tr class="border-b border-slate-200 dark:border-slate-800 text-[11px] font-bold uppercase text-slate-400 bg-slate-50/80 dark:bg-slate-950/40">
+                  <th class="py-3 px-4">Descrição</th>
+                  <th class="py-3 px-4">Data</th>
+                  <th class="py-3 px-4 text-right">Valor</th>
+                  <th class="py-3 px-4 text-right">Ações</th>
+                </tr>
+              </thead>
+              <tbody id="tbodyOutrosCompra" class="divide-y divide-slate-200/70 dark:divide-slate-800 text-sm"></tbody>
+              <tfoot>
+                <tr class="bg-amber-50/70 dark:bg-amber-950/30 font-bold text-sm border-t-2 border-amber-200 dark:border-amber-900">
+                  <td colspan="2" class="py-3 px-4 text-xs uppercase">Total Documentação & Outros Gastos</td>
+                  <td id="tfootOutrosCompraValor" class="py-3 px-4 text-right text-amber-700 dark:text-amber-300">R$ 20.249,51</td>
+                  <td></td>
+                </tr>
+              </tfoot>
+            </table>
+          </div>
+        </div>
+
+      </div>
+
+      <!-- SUB-ABA 1.3: REFORMAS E MELHORIAS FIXAS (DA PLANILHA 1) -->
+      <div id="subView-reformas" class="hidden">
+        <div class="bg-white dark:bg-slate-900 rounded-2xl border border-slate-200 dark:border-slate-800 shadow-sm overflow-hidden">
+          <div class="p-4 sm:p-5 border-b border-slate-200 dark:border-slate-800 flex flex-col sm:flex-row sm:items-center justify-between gap-3 bg-slate-50/50 dark:bg-slate-900/50">
+            <div>
+              <div class="flex items-center gap-2">
+                <span class="px-2.5 py-0.5 rounded-full text-xs font-bold bg-purple-100 text-purple-700 dark:bg-purple-950 dark:text-purple-300">
+                  Fica no Apartamento
+                </span>
+                <h3 class="font-bold text-base">Reformas & Melhorias Estruturais (Planilha Principal)</h3>
+              </div>
+              <p class="text-xs text-slate-500 dark:text-slate-400 mt-1">
+                Janelas, armários de vidro fixos, espelhos sob medida, insulfilme, parte elétrica, registro de gás e interfone.
+              </p>
+            </div>
+            <button onclick="openItemModal('reformasMelhorias')" class="px-4 py-2 rounded-xl bg-purple-600 hover:bg-purple-700 text-white text-xs sm:text-sm font-bold flex items-center gap-1.5 self-start sm:self-auto shadow-sm transition">
+              <i class="ph-bold ph-plus"></i>
+              Nova Reforma / Melhoria
+            </button>
+          </div>
+
+          <div class="overflow-x-auto">
+            <table class="w-full text-left border-collapse">
+              <thead>
+                <tr class="border-b border-slate-200 dark:border-slate-800 text-[11px] font-bold uppercase text-slate-400 bg-slate-50/80 dark:bg-slate-950/40">
+                  <th class="py-3 px-4">Descrição do Serviço / Melhoria</th>
+                  <th class="py-3 px-4">Data</th>
+                  <th class="py-3 px-4 text-right">Valor Pago</th>
+                  <th class="py-3 px-4 text-right">Ações</th>
+                </tr>
+              </thead>
+              <tbody id="tbodyReformas" class="divide-y divide-slate-200/70 dark:divide-slate-800 text-sm"></tbody>
+              <tfoot>
+                <tr class="bg-purple-50/70 dark:bg-purple-950/30 font-bold text-sm border-t-2 border-purple-200 dark:border-purple-900">
+                  <td colspan="2" class="py-3.5 px-4 text-xs uppercase">Total em Reformas & Melhorias Fixas (Planilha 1)</td>
+                  <td id="tfootReformasValor" class="py-3.5 px-4 text-right text-purple-700 dark:text-purple-300 text-base">R$ 4.916,10</td>
+                  <td></td>
+                </tr>
+              </tfoot>
+            </table>
+          </div>
+        </div>
+      </div>
+
+    </section>
+
+    <!-- =================================================================== -->
+    <!-- ABA 2: MÓVEIS, ELETRÔNICOS E ELETRODOMÉSTICOS (PLANILHA SEPARADA)   -->
+    <!-- =================================================================== -->
+    <section id="view-moveis" class="hidden space-y-6">
+
+      <!-- Cabeçalho Exclusivo da Planilha Separada (Móveis / Eletros / Uso vs Fica no Apto) -->
+      <div class="bg-gradient-to-r from-indigo-950 via-slate-900 to-slate-900 text-white rounded-2xl p-5 sm:p-6 shadow-lg border border-indigo-900/50">
+        <div class="flex flex-col lg:flex-row lg:items-center justify-between gap-4">
+          <div class="space-y-1.5">
+            <div class="inline-flex items-center gap-2 px-2.5 py-1 rounded-full bg-indigo-500/20 border border-indigo-400/30 text-indigo-300 text-xs font-semibold">
+              <i class="ph-fill ph-couch"></i>
+              PARTE 2 • PLANILHA SEPARADA DE MÓVEIS, ELETRÔNICOS E ELETRODOMÉSTICOS
+            </div>
+            <h2 class="text-xl sm:text-2xl font-extrabold tracking-tight">
+              O que Comprei para Usar (Levo) vs. O que Fica no Apto
+            </h2>
+            <p class="text-xs sm:text-sm text-slate-300 max-w-3xl">
+              Controle separado de todos os móveis, eletrodomésticos, eletrônicos e utilidades comprados. Você pode alternar com 1 clique se cada item é de <strong>Uso Pessoal (você leva se mudar)</strong> ou se <strong>Fica no Apto (embutido/melhoria)</strong>.
+            </p>
+          </div>
+          <div class="flex flex-wrap items-center gap-2">
+            <button onclick="openMovelModal()" class="px-4 py-2.5 rounded-xl bg-indigo-500 hover:bg-indigo-600 text-white text-xs sm:text-sm font-bold shadow-md shadow-indigo-500/20 flex items-center gap-2 transition">
+              <i class="ph-bold ph-plus-circle text-base"></i>
+              Novo Móvel / Eletro / Item
+            </button>
+          </div>
+        </div>
+
+        <!-- 3 Grandes Indicadores de Separação (Uso Pessoal vs Fica no Apto vs Total da Planilha 2) -->
+        <div class="grid grid-cols-1 md:grid-cols-3 gap-4 mt-6 pt-5 border-t border-white/10">
+          <!-- Card 1: Para Uso Pessoal (Leva) -->
+          <div class="bg-white/5 border border-indigo-400/30 rounded-xl p-4 flex items-center justify-between">
+            <div>
+              <span class="inline-flex items-center gap-1.5 text-xs font-bold uppercase tracking-wider text-indigo-300">
+                <i class="ph-fill ph-truck"></i>
+                1. Comprado p/ Uso (Você Leva)
+              </span>
+              <p id="kpiMoveisUsoValor" class="text-2xl font-black text-white mt-1">R$ 3.700,00</p>
+              <p class="text-xs text-slate-300 mt-0.5">
+                <strong id="kpiMoveisUsoQtd">37</strong> itens (Móveis, Eletros, Utilidades)
+              </p>
+            </div>
+            <div class="w-12 h-12 rounded-xl bg-indigo-500/20 border border-indigo-400/30 flex items-center justify-center text-indigo-300">
+              <i class="ph-duotone ph-television text-2xl"></i>
+            </div>
+          </div>
+
+          <!-- Card 2: Fica no Apto (Na Planilha 2) -->
+          <div class="bg-white/5 border border-amber-400/30 rounded-xl p-4 flex items-center justify-between">
+            <div>
+              <span class="inline-flex items-center gap-1.5 text-xs font-bold uppercase tracking-wider text-amber-300">
+                <i class="ph-fill ph-house-line"></i>
+                2. Fica no Apto (Desta Planilha)
+              </span>
+              <p id="kpiMoveisFicaValor" class="text-2xl font-black text-amber-300 mt-1">R$ 1.800,00</p>
+              <p class="text-xs text-slate-300 mt-0.5">
+                <strong id="kpiMoveisFicaQtd">18</strong> itens (Melhorias / Fixados no Apto)
+              </p>
+            </div>
+            <div class="w-12 h-12 rounded-xl bg-amber-500/20 border border-amber-400/30 flex items-center justify-center text-amber-300">
+              <i class="ph-duotone ph-wrench text-2xl"></i>
+            </div>
+          </div>
+
+          <!-- Card 3: Soma Total da Planilha 2 + Soma Geral que Fica no Apto -->
+          <div class="bg-white/5 border border-emerald-400/30 rounded-xl p-4 flex items-center justify-between">
+            <div>
+              <span class="inline-flex items-center gap-1.5 text-xs font-bold uppercase tracking-wider text-emerald-300">
+                <i class="ph-fill ph-stack"></i>
+                Total Planilha Móveis/Eletros
+              </span>
+              <p id="kpiMoveisTotalValor" class="text-2xl font-black text-emerald-300 mt-1">R$ 5.500,00</p>
+              <p class="text-xs text-slate-300 mt-0.5">
+                Total <strong id="kpiMoveisTotalQtd">55</strong> itens • Clique no valor p/ editar rápido
+              </p>
+            </div>
+            <div class="w-12 h-12 rounded-xl bg-emerald-500/20 border border-emerald-400/30 flex items-center justify-center text-emerald-300">
+              <i class="ph-duotone ph-calculator text-2xl"></i>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Resumo Rápido por Categoria / Tipo da Planilha 2 -->
+      <div id="moveisCategorySummary" class="grid grid-cols-2 sm:grid-cols-4 lg:grid-cols-7 gap-2.5"></div>
+
+      <!-- Barra de Filtros Inteligentes -->
+      <div class="bg-white dark:bg-slate-900 p-4 rounded-2xl border border-slate-200 dark:border-slate-800 shadow-sm space-y-3">
+        <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-5 gap-3">
+          <!-- Busca -->
+          <div class="relative lg:col-span-2">
+            <i class="ph-bold ph-magnifying-glass absolute left-3.5 top-1/2 -translate-y-1/2 text-slate-400"></i>
+            <input type="text" id="filterMovelSearch" oninput="renderMoveisTable()" placeholder="Buscar móvel, eletrodoméstico, loja (ex: Geladeira, Shopee)..." class="w-full pl-10 pr-4 py-2 rounded-xl text-sm bg-slate-50 dark:bg-slate-800 border border-slate-200 dark:border-slate-700 focus:outline-none focus:ring-2 focus:ring-indigo-500" />
+          </div>
+
+          <!-- Filtro Destino (Para Uso vs Fica no Apto) -->
+          <div>
+            <select id="filterMovelDestino" onchange="renderMoveisTable()" class="w-full px-3 py-2 rounded-xl text-sm bg-slate-50 dark:bg-slate-800 border border-slate-200 dark:border-slate-700 font-medium focus:outline-none focus:ring-2 focus:ring-indigo-500">
+              <option value="ALL">🎯 Destino: Todos (Uso + Fica)</option>
+              <option value="uso">🚚 Só para Uso Pessoal (Levar)</option>
+              <option value="fica">🏠 Só o que Fica no Apto</option>
+            </select>
+          </div>
+
+          <!-- Filtro Tipo -->
+          <div>
+            <select id="filterMovelTipo" onchange="renderMoveisTable()" class="w-full px-3 py-2 rounded-xl text-sm bg-slate-50 dark:bg-slate-800 border border-slate-200 dark:border-slate-700 font-medium focus:outline-none focus:ring-2 focus:ring-indigo-500">
+              <option value="ALL">📦 Todos os Tipos</option>
+              <option value="móvel">Móvel</option>
+              <option value="eletrodoméstico">Eletrodoméstico</option>
+              <option value="eletrônico">Eletrônico</option>
+              <option value="decoração">Decoração</option>
+              <option value="utilidade">Utilidade</option>
+              <option value="melhoria apto">Melhoria Apto</option>
+              <option value="reforma/manutenção apto">Reforma/Manutenção Apto</option>
+            </select>
+          </div>
+
+          <!-- Filtro Cômodo -->
+          <div>
+            <select id="filterMovelComodo" onchange="renderMoveisTable()" class="w-full px-3 py-2 rounded-xl text-sm bg-slate-50 dark:bg-slate-800 border border-slate-200 dark:border-slate-700 font-medium focus:outline-none focus:ring-2 focus:ring-indigo-500">
+              <option value="ALL">🚪 Todos os Cômodos</option>
+              <option value="Cozinha">Cozinha</option>
+              <option value="Sala">Sala</option>
+              <option value="Quarto Suite">Quarto Suíte</option>
+              <option value="Quarto Visita">Quarto Visita</option>
+              <option value="Banheiros">Banheiros</option>
+              <option value="Lavanderia">Lavanderia</option>
+              <option value="Area">Área</option>
+              <option value="APTO">APTO (Geral)</option>
+            </select>
+          </div>
+        </div>
+
+        <div class="flex flex-wrap items-center justify-between gap-2 pt-2 border-t border-slate-100 dark:border-slate-800 text-xs text-slate-500 dark:text-slate-400">
+          <div class="flex items-center gap-2">
+            <i class="ph-fill ph-info text-indigo-500"></i>
+            <span>Dica: Na sua planilha os itens estavam com valor de <strong>R$ 100,00</strong> de marcação. Clique direto sobre qualquer valor na tabela para digitar o preço real!</span>
+          </div>
+          <div class="flex items-center gap-3 font-semibold">
+            <span id="filterResultCount">Exibindo 55 itens</span>
+            <span class="text-indigo-600 dark:text-indigo-400" id="filterResultSum">Soma do filtro: R$ 5.500,00</span>
+          </div>
+        </div>
+      </div>
+
+      <!-- Tabela de Móveis, Eletrônicos e Eletrodomésticos -->
+      <div class="bg-white dark:bg-slate-900 rounded-2xl border border-slate-200 dark:border-slate-800 shadow-sm overflow-hidden">
+        <div class="overflow-x-auto">
+          <table class="w-full text-left border-collapse">
+            <thead>
+              <tr class="border-b border-slate-200 dark:border-slate-800 text-[11px] font-bold uppercase text-slate-400 bg-slate-50/80 dark:bg-slate-950/40">
+                <th class="py-3.5 px-4">Data</th>
+                <th class="py-3.5 px-4">Item / Descrição</th>
+                <th class="py-3.5 px-3">Destino (1 Clique)</th>
+                <th class="py-3.5 px-3">Tipo</th>
+                <th class="py-3.5 px-3">Cômodo</th>
+                <th class="py-3.5 px-3">Pagamento / Loja</th>
+                <th class="py-3.5 px-4 text-right">Valor (R$)</th>
+                <th class="py-3.5 px-4 text-right">Ações</th>
+              </tr>
+            </thead>
+            <tbody id="tbodyMoveis" class="divide-y divide-slate-200/70 dark:divide-slate-800 text-sm"></tbody>
+          </table>
+        </div>
+      </div>
+
+    </section>
+
+    <!-- =================================================================== -->
+    <!-- ABA 3: VISÃO CONSOLIDADA & ANÁLISE PATRIMONIAL                      -->
+    <!-- =================================================================== -->
+    <section id="view-resumo" class="hidden space-y-6">
+      <div class="bg-white dark:bg-slate-900 rounded-2xl p-6 border border-slate-200 dark:border-slate-800 shadow-sm">
+        <h2 class="text-xl font-extrabold flex items-center gap-2">
+          <i class="ph-duotone ph-scales text-emerald-500 text-2xl"></i>
+          Balanço Geral: O que Fica no Apto 301 vs. O que é Seu para Uso Pessoal
+        </h2>
+        <p class="text-xs sm:text-sm text-slate-500 dark:text-slate-400 mt-1">
+          Esta visão consolida as duas planilhas para você saber exatamente quanto custou o imóvel + benfeitorias fixas (caso um dia venda ou avalie o imóvel) e quanto você investiu em bens móveis, eletrodomésticos e eletrônicos para o seu uso.
+        </p>
+
+        <div class="grid grid-cols-1 md:grid-cols-3 gap-5 mt-6">
+          
+          <!-- Coluna 1: Custo Total que Fica no Apartamento -->
+          <div class="rounded-2xl p-5 bg-emerald-50/70 dark:bg-emerald-950/30 border border-emerald-200 dark:border-emerald-900/70 space-y-4">
+            <div class="flex items-center justify-between">
+              <span class="px-2.5 py-1 rounded-lg bg-emerald-600 text-white text-xs font-bold uppercase">
+                Fica no Apartamento
+              </span>
+              <i class="ph-duotone ph-buildings text-2xl text-emerald-600 dark:text-emerald-400"></i>
+            </div>
+            <div>
+              <p class="text-xs text-slate-500 dark:text-slate-400 font-semibold uppercase">Custo Total Incorporado ao Apto</p>
+              <p id="resumoTotalFicaGeral" class="text-2xl sm:text-3xl font-black text-emerald-700 dark:text-emerald-300 mt-1">R$ 149.167,52</p>
+            </div>
+            <ul class="space-y-2 text-xs border-t border-emerald-200/70 dark:border-emerald-800/60 pt-3">
+              <li class="flex justify-between">
+                <span class="text-slate-600 dark:text-slate-400">Entrada + FGTS:</span>
+                <strong id="resumoItemEntradaFgts">R$ 80.000,00</strong>
+              </li>
+              <li class="flex justify-between">
+                <span class="text-slate-600 dark:text-slate-400">Parcelas Mensais Pagas:</span>
+                <strong id="resumoItemParcelas">R$ 30.432,91</strong>
+              </li>
+              <li class="flex justify-between">
+                <span class="text-slate-600 dark:text-slate-400">Amortizações Realizadas:</span>
+                <strong id="resumoItemAmortizacoes">R$ 11.769,00</strong>
+              </li>
+              <li class="flex justify-between">
+                <span class="text-slate-600 dark:text-slate-400">Documentação, ITBI & Cartório:</span>
+                <strong id="resumoItemDoc">R$ 20.249,51</strong>
+              </li>
+              <li class="flex justify-between">
+                <span class="text-slate-600 dark:text-slate-400">Reformas & Melhorias (Planilha 1):</span>
+                <strong id="resumoItemReforma1">R$ 4.916,10</strong>
+              </li>
+              <li class="flex justify-between text-amber-700 dark:text-amber-300">
+                <span>Itens que Ficam no Apto (Planilha 2):</span>
+                <strong id="resumoItemReforma2">R$ 1.800,00</strong>
+              </li>
+            </ul>
+          </div>
+
+          <!-- Coluna 2: O que Você Comprou para Usar (Móveis, Eletros, Eletrônicos) -->
+          <div class="rounded-2xl p-5 bg-indigo-50/70 dark:bg-indigo-950/30 border border-indigo-200 dark:border-indigo-900/70 space-y-4">
+            <div class="flex items-center justify-between">
+              <span class="px-2.5 py-1 rounded-lg bg-indigo-600 text-white text-xs font-bold uppercase">
+                Compras para Uso (Você Leva)
+              </span>
+              <i class="ph-duotone ph-couch text-2xl text-indigo-600 dark:text-indigo-400"></i>
+            </div>
+            <div>
+              <p class="text-xs text-slate-500 dark:text-slate-400 font-semibold uppercase">Patrimônio em Móveis & Eletros</p>
+              <p id="resumoTotalUsoPessoal" class="text-2xl sm:text-3xl font-black text-indigo-700 dark:text-indigo-300 mt-1">R$ 3.700,00</p>
+            </div>
+            <div id="resumoListaTiposUso" class="space-y-2 text-xs border-t border-indigo-200/70 dark:border-indigo-800/60 pt-3"></div>
+          </div>
+
+          <!-- Coluna 3: Desembolso Geral Acumulado (Planilha 1 + Planilha 2) -->
+          <div class="rounded-2xl p-5 bg-slate-900 text-white space-y-4 flex flex-col justify-between">
+            <div class="space-y-4">
+              <div class="flex items-center justify-between">
+                <span class="px-2.5 py-1 rounded-lg bg-white/10 text-emerald-300 text-xs font-bold uppercase">
+                  Soma das 2 Planilhas
+                </span>
+                <i class="ph-duotone ph-vault text-2xl text-emerald-400"></i>
+              </div>
+              <div>
+                <p class="text-xs text-slate-400 font-semibold uppercase">Desembolso Total Geral</p>
+                <p id="resumoGrandeTotalGeral" class="text-2xl sm:text-3xl font-black text-white mt-1">R$ 152.867,52</p>
+              </div>
+              <div class="space-y-2 text-xs border-t border-white/10 pt-3">
+                <div class="flex justify-between">
+                  <span class="text-slate-400">Total Planilha 1 (Imóvel):</span>
+                  <strong id="resumoSubPlanilha1" class="text-emerald-300">R$ 147.367,52</strong>
+                </div>
+                <div class="flex justify-between">
+                  <span class="text-slate-400">Total Planilha 2 (Móveis/Eletros):</span>
+                  <strong id="resumoSubPlanilha2" class="text-indigo-300">R$ 5.500,00</strong>
+                </div>
+                <div class="flex justify-between pt-2 border-t border-white/10">
+                  <span class="text-slate-400">Total investido só em Reformas/Melhorias (1+2):</span>
+                  <strong id="resumoTotalReformasAmbas" class="text-amber-300">R$ 6.716,10</strong>
+                </div>
+              </div>
+            </div>
+
+            <button onclick="exportToCSV()" class="w-full py-2.5 px-4 rounded-xl bg-emerald-500 hover:bg-emerald-600 text-slate-950 font-bold text-xs flex items-center justify-center gap-2 transition">
+              <i class="ph-bold ph-microsoft-excel-logo text-base"></i>
+              Baixar Relatório Completo (.CSV / Excel)
+            </button>
+          </div>
+
+        </div>
+      </div>
+
+      <!-- Gastos por Cômodo da Planilha 2 -->
+      <div class="bg-white dark:bg-slate-900 rounded-2xl p-6 border border-slate-200 dark:border-slate-800 shadow-sm">
+        <h3 class="font-bold text-base mb-4 flex items-center gap-2">
+          <i class="ph-duotone ph-door-open text-indigo-500 text-xl"></i>
+          Distribuição por Cômodo (Planilha de Móveis & Eletros)
+        </h3>
+        <div id="resumoPorComodoGrid" class="grid grid-cols-2 sm:grid-cols-4 gap-3"></div>
+      </div>
+    </section>
+
+  </main>
+
+  <!-- MOBILE BOTTOM NAVIGATION BAR -->
+  <nav class="md:hidden fixed bottom-0 left-0 right-0 z-40 bg-white/95 dark:bg-slate-900/95 backdrop-blur-md border-t border-slate-200 dark:border-slate-800 px-2 py-1.5 flex items-center justify-around">
+    <button onclick="switchMainTab('imovel')" id="mobTab-imovel" class="flex flex-col items-center justify-center py-1 px-3 rounded-xl text-xs font-bold transition">
+      <i class="ph-bold ph-house-line text-xl mb-0.5"></i>
+      <span>1. Imóvel</span>
+    </button>
+    <button onclick="switchMainTab('moveis')" id="mobTab-moveis" class="flex flex-col items-center justify-center py-1 px-3 rounded-xl text-xs font-bold transition">
+      <i class="ph-bold ph-couch text-xl mb-0.5"></i>
+      <span>2. Móveis/Eletros</span>
+    </button>
+    <button onclick="switchMainTab('resumo')" id="mobTab-resumo" class="flex flex-col items-center justify-center py-1 px-3 rounded-xl text-xs font-bold transition">
+      <i class="ph-bold ph-chart-pie-slice text-xl mb-0.5"></i>
+      <span>3. Consolidado</span>
+    </button>
+  </nav>
+
+  <!-- ===================================================================== -->
+  <!-- MODAL 1: ADICIONAR / EDITAR ITEM DA PLANILHA 1 (IMÓVEL)               -->
+  <!-- ===================================================================== -->
+  <div id="modalImovelItem" class="fixed inset-0 z-50 hidden bg-slate-950/60 backdrop-blur-sm flex items-center justify-center p-4">
+    <div class="bg-white dark:bg-slate-900 rounded-2xl max-w-md w-full border border-slate-200 dark:border-slate-800 shadow-2xl overflow-hidden">
+      <div class="px-5 py-4 border-b border-slate-200 dark:border-slate-800 flex items-center justify-between">
+        <h3 id="modalImovelTitle" class="font-bold text-base">Novo Lançamento</h3>
+        <button onclick="closeImovelModal()" class="p-1.5 rounded-lg text-slate-400 hover:bg-slate-100 dark:hover:bg-slate-800">
+          <i class="ph-bold ph-x text-lg"></i>
+        </button>
+      </div>
+      <form id="formImovelItem" onsubmit="saveImovelItem(event)" class="p-5 space-y-4">
+        <input type="hidden" id="imovelListKey" />
+        <input type="hidden" id="imovelItemId" />
+
+        <div id="fieldImovelDescricaoWrap">
+          <label class="block text-xs font-bold uppercase text-slate-500 dark:text-slate-400 mb-1">Descrição</label>
+          <input type="text" id="imovelItemDescricao" placeholder="Ex: ITBI, Reforma Janela, etc." class="w-full px-3.5 py-2.5 rounded-xl bg-slate-50 dark:bg-slate-800 border border-slate-200 dark:border-slate-700 text-sm focus:outline-none focus:ring-2 focus:ring-emerald-500" />
+        </div>
+
+        <div class="grid grid-cols-2 gap-3">
+          <div>
+            <label class="block text-xs font-bold uppercase text-slate-500 dark:text-slate-400 mb-1">Data</label>
+            <input type="date" id="imovelItemData" required class="w-full px-3.5 py-2.5 rounded-xl bg-slate-50 dark:bg-slate-800 border border-slate-200 dark:border-slate-700 text-sm focus:outline-none focus:ring-2 focus:ring-emerald-500" />
+          </div>
+          <div id="fieldImovelQtdWrap">
+            <label class="block text-xs font-bold uppercase text-slate-500 dark:text-slate-400 mb-1">Qtd. Parcelas</label>
+            <input type="number" id="imovelItemQtd" min="1" step="1" value="1" class="w-full px-3.5 py-2.5 rounded-xl bg-slate-50 dark:bg-slate-800 border border-slate-200 dark:border-slate-700 text-sm focus:outline-none focus:ring-2 focus:ring-emerald-500" />
+          </div>
+        </div>
+
+        <div>
+          <label class="block text-xs font-bold uppercase text-slate-500 dark:text-slate-400 mb-1">Valor Pago (R$)</label>
+          <input type="number" id="imovelItemValor" step="0.01" required placeholder="0,00" class="w-full px-3.5 py-2.5 rounded-xl bg-slate-50 dark:bg-slate-800 border border-slate-200 dark:border-slate-700 text-sm font-bold focus:outline-none focus:ring-2 focus:ring-emerald-500" />
+        </div>
+
+        <div class="flex items-center justify-end gap-2 pt-2">
+          <button type="button" onclick="closeImovelModal()" class="px-4 py-2.5 rounded-xl text-xs font-bold bg-slate-100 hover:bg-slate-200 dark:bg-slate-800 dark:hover:bg-slate-700">
+            Cancelar
+          </button>
+          <button type="submit" class="px-5 py-2.5 rounded-xl text-xs font-bold bg-emerald-600 hover:bg-emerald-700 text-white shadow-sm">
+            Salvar Lançamento
+          </button>
+        </div>
+      </form>
+    </div>
+  </div>
+
+  <!-- ===================================================================== -->
+  <!-- MODAL 2: ADICIONAR / EDITAR ITEM DA PLANILHA 2 (MÓVEIS & ELETROS)     -->
+  <!-- ===================================================================== -->
+  <div id="modalMovelItem" class="fixed inset-0 z-50 hidden bg-slate-950/60 backdrop-blur-sm flex items-center justify-center p-4">
+    <div class="bg-white dark:bg-slate-900 rounded-2xl max-w-lg w-full border border-slate-200 dark:border-slate-800 shadow-2xl overflow-hidden">
+      <div class="px-5 py-4 border-b border-slate-200 dark:border-slate-800 flex items-center justify-between">
+        <h3 id="modalMovelTitle" class="font-bold text-base">Adicionar Móvel / Eletrodoméstico</h3>
+        <button onclick="closeMovelModal()" class="p-1.5 rounded-lg text-slate-400 hover:bg-slate-100 dark:hover:bg-slate-800">
+          <i class="ph-bold ph-x text-lg"></i>
+        </button>
+      </div>
+      <form id="formMovelItem" onsubmit="saveMovelItem(event)" class="p-5 space-y-4">
+        <input type="hidden" id="movelItemId" />
+
+        <div>
+          <label class="block text-xs font-bold uppercase text-slate-500 dark:text-slate-400 mb-1">Descrição do Item</label>
+          <input type="text" id="movelDescricao" required placeholder="Ex: Geladeira, Máquina Lava e Seca, Sofá..." class="w-full px-3.5 py-2.5 rounded-xl bg-slate-50 dark:bg-slate-800 border border-slate-200 dark:border-slate-700 text-sm focus:outline-none focus:ring-2 focus:ring-indigo-500" />
+        </div>
+
+        <!-- Escolha clara entre Uso Pessoal vs Fica no Apto -->
+        <div>
+          <label class="block text-xs font-bold uppercase text-slate-500 dark:text-slate-400 mb-1.5">Este item é para seu uso (leva em mudança) ou fica no Apto?</label>
+          <div class="grid grid-cols-2 gap-2.5">
+            <label class="cursor-pointer">
+              <input type="radio" name="movelDestinoRadio" value="uso" checked class="peer hidden" />
+              <div class="p-3 rounded-xl border-2 border-slate-200 dark:border-slate-700 peer-checked:border-indigo-500 peer-checked:bg-indigo-50/70 dark:peer-checked:bg-indigo-950/50 text-xs font-bold flex items-center gap-2">
+                <i class="ph-fill ph-truck text-indigo-500 text-lg"></i>
+                <div>
+                  <span class="block">Para Uso Pessoal</span>
+                  <span class="text-[10px] font-normal text-slate-500">Eu levo se mudar</span>
+                </div>
+              </div>
+            </label>
+            <label class="cursor-pointer">
+              <input type="radio" name="movelDestinoRadio" value="fica" class="peer hidden" />
+              <div class="p-3 rounded-xl border-2 border-slate-200 dark:border-slate-700 peer-checked:border-amber-500 peer-checked:bg-amber-50/70 dark:peer-checked:bg-amber-950/50 text-xs font-bold flex items-center gap-2">
+                <i class="ph-fill ph-house-line text-amber-500 text-lg"></i>
+                <div>
+                  <span class="block">Fica no Apto</span>
+                  <span class="text-[10px] font-normal text-slate-500">Fixo / Melhoria</span>
+                </div>
+              </div>
+            </label>
+          </div>
+        </div>
+
+        <div class="grid grid-cols-2 sm:grid-cols-3 gap-3">
+          <div>
+            <label class="block text-xs font-bold uppercase text-slate-500 dark:text-slate-400 mb-1">Data</label>
+            <input type="date" id="movelData" required class="w-full px-3 py-2 rounded-xl bg-slate-50 dark:bg-slate-800 border border-slate-200 dark:border-slate-700 text-sm" />
+          </div>
+          <div>
+            <label class="block text-xs font-bold uppercase text-slate-500 dark:text-slate-400 mb-1">Tipo</label>
+            <select id="movelTipo" onchange="autoSuggestDestino()" class="w-full px-3 py-2 rounded-xl bg-slate-50 dark:bg-slate-800 border border-slate-200 dark:border-slate-700 text-sm">
+              <option value="móvel">móvel</option>
+              <option value="eletrodoméstico">eletrodoméstico</option>
+              <option value="eletrônico">eletrônico</option>
+              <option value="decoração">decoração</option>
+              <option value="utilidade">utilidade</option>
+              <option value="melhoria apto">melhoria apto</option>
+              <option value="reforma/manutenção apto">reforma/manutenção apto</option>
+            </select>
+          </div>
+          <div class="col-span-2 sm:col-span-1">
+            <label class="block text-xs font-bold uppercase text-slate-500 dark:text-slate-400 mb-1">Cômodo</label>
+            <select id="movelComodo" class="w-full px-3 py-2 rounded-xl bg-slate-50 dark:bg-slate-800 border border-slate-200 dark:border-slate-700 text-sm">
+              <option value="Cozinha">Cozinha</option>
+              <option value="Sala">Sala</option>
+              <option value="Quarto Suite">Quarto Suite</option>
+              <option value="Quarto Visita">Quarto Visita</option>
+              <option value="Banheiros">Banheiros</option>
+              <option value="Lavanderia">Lavanderia</option>
+              <option value="Area">Area</option>
+              <option value="APTO">APTO</option>
+            </select>
+          </div>
+        </div>
+
+        <div class="grid grid-cols-2 sm:grid-cols-3 gap-3">
+          <div>
+            <label class="block text-xs font-bold uppercase text-slate-500 dark:text-slate-400 mb-1">Valor (R$)</label>
+            <input type="number" id="movelValor" step="0.01" required placeholder="100.00" class="w-full px-3 py-2 rounded-xl bg-slate-50 dark:bg-slate-800 border border-slate-200 dark:border-slate-700 text-sm font-bold" />
+          </div>
+          <div>
+            <label class="block text-xs font-bold uppercase text-slate-500 dark:text-slate-400 mb-1">Pagamento</label>
+            <select id="movelPagamento" class="w-full px-3 py-2 rounded-xl bg-slate-50 dark:bg-slate-800 border border-slate-200 dark:border-slate-700 text-sm">
+              <option value="Cartão de Crédito">Cartão de Crédito</option>
+              <option value="PIX">PIX</option>
+              <option value="Boleto">Boleto</option>
+              <option value="Dinheiro">Dinheiro</option>
+            </select>
+          </div>
+          <div class="col-span-2 sm:col-span-1">
+            <label class="block text-xs font-bold uppercase text-slate-500 dark:text-slate-400 mb-1">Prazo / Parcelas</label>
+            <input type="text" id="movelPrazo" placeholder="Ex: 12x, a vista" class="w-full px-3 py-2 rounded-xl bg-slate-50 dark:bg-slate-800 border border-slate-200 dark:border-slate-700 text-sm" />
+          </div>
+        </div>
+
+        <div>
+          <label class="block text-xs font-bold uppercase text-slate-500 dark:text-slate-400 mb-1">Loja / Fornecedor</label>
+          <input type="text" id="movelLoja" placeholder="Ex: Mercado Livre, Shopee, Amazon, Magazine Luiza" class="w-full px-3.5 py-2 rounded-xl bg-slate-50 dark:bg-slate-800 border border-slate-200 dark:border-slate-700 text-sm" />
+        </div>
+
+        <div class="flex items-center justify-end gap-2 pt-2">
+          <button type="button" onclick="closeMovelModal()" class="px-4 py-2.5 rounded-xl text-xs font-bold bg-slate-100 hover:bg-slate-200 dark:bg-slate-800 dark:hover:bg-slate-700">
+            Cancelar
+          </button>
+          <button type="submit" class="px-5 py-2.5 rounded-xl text-xs font-bold bg-indigo-600 hover:bg-indigo-700 text-white shadow-sm">
+            Salvar Item
+          </button>
+        </div>
+      </form>
+    </div>
+  </div>
+
+  <!-- ===================================================================== -->
+  <!-- MODAL 3: EDITAR PARÂMETROS DO CONTRATO DE FINANCIAMENTO               -->
+  <!-- ===================================================================== -->
+  <div id="modalConfig" class="fixed inset-0 z-50 hidden bg-slate-950/60 backdrop-blur-sm flex items-center justify-center p-4">
+    <div class="bg-white dark:bg-slate-900 rounded-2xl max-w-md w-full border border-slate-200 dark:border-slate-800 shadow-2xl overflow-hidden">
+      <div class="px-5 py-4 border-b border-slate-200 dark:border-slate-800 flex items-center justify-between">
+        <h3 class="font-bold text-base">Dados do Financiamento (Apto 301)</h3>
+        <button onclick="closeConfigModal()" class="p-1.5 rounded-lg text-slate-400 hover:bg-slate-100 dark:hover:bg-slate-800">
+          <i class="ph-bold ph-x text-lg"></i>
+        </button>
+      </div>
+      <form onsubmit="saveConfigModal(event)" class="p-5 space-y-4">
+        <div>
+          <label class="block text-xs font-bold uppercase text-slate-500 mb-1">Valor de Venda do Imóvel (R$)</label>
+          <input type="number" step="0.01" id="cfgValorVenda" required class="w-full px-3.5 py-2 rounded-xl bg-slate-50 dark:bg-slate-800 border border-slate-200 dark:border-slate-700 text-sm font-bold" />
+        </div>
+        <div class="grid grid-cols-2 gap-3">
+          <div>
+            <label class="block text-xs font-bold uppercase text-slate-500 mb-1">FGTS Utilizado (R$)</label>
+            <input type="number" step="0.01" id="cfgValorFgts" required class="w-full px-3.5 py-2 rounded-xl bg-slate-50 dark:bg-slate-800 border border-slate-200 dark:border-slate-700 text-sm font-bold" />
+          </div>
+          <div>
+            <label class="block text-xs font-bold uppercase text-slate-500 mb-1">Valor Financiado (R$)</label>
+            <input type="number" step="0.01" id="cfgValorFinanciado" required class="w-full px-3.5 py-2 rounded-xl bg-slate-50 dark:bg-slate-800 border border-slate-200 dark:border-slate-700 text-sm font-bold" />
+          </div>
+        </div>
+        <div>
+          <label class="block text-xs font-bold uppercase text-slate-500 mb-1">Prazo Total Contratado (Meses/Parcelas)</label>
+          <input type="number" step="1" id="cfgTotalParcelas" required class="w-full px-3.5 py-2 rounded-xl bg-slate-50 dark:bg-slate-800 border border-slate-200 dark:border-slate-700 text-sm font-bold" />
+        </div>
+        <div class="flex justify-end gap-2 pt-2">
+          <button type="button" onclick="closeConfigModal()" class="px-4 py-2 rounded-xl text-xs font-bold bg-slate-100 dark:bg-slate-800">Cancelar</button>
+          <button type="submit" class="px-5 py-2 rounded-xl text-xs font-bold bg-emerald-600 text-white">Salvar Contrato</button>
+        </div>
+      </form>
+    </div>
+  </div>
+
+  <!-- ===================================================================== -->
+  <!-- MODAL 4: SINCRONIZAÇÃO NUVEM (GITHUB PAGES + GOOGLE SHEETS)           -->
+  <!-- ===================================================================== -->
+  <div id="modalCloud" class="fixed inset-0 z-50 hidden bg-slate-950/60 backdrop-blur-sm flex items-center justify-center p-4">
+    <div class="bg-white dark:bg-slate-900 rounded-2xl max-w-2xl w-full border border-slate-200 dark:border-slate-800 shadow-2xl overflow-hidden max-h-[90vh] flex flex-col">
+      <div class="px-5 py-4 border-b border-slate-200 dark:border-slate-800 flex items-center justify-between">
+        <div class="flex items-center gap-2">
+          <i class="ph-fill ph-cloud-check text-indigo-500 text-xl"></i>
+          <h3 class="font-bold text-base">Acessar no Computador e Celular (GitHub + Nuvem Google)</h3>
+        </div>
+        <button onclick="closeCloudModal()" class="p-1.5 rounded-lg text-slate-400 hover:bg-slate-100 dark:hover:bg-slate-800">
+          <i class="ph-bold ph-x text-lg"></i>
+        </button>
+      </div>
+
+      <div class="p-5 overflow-y-auto space-y-5 text-sm">
+        <!-- URL do Google Apps Script -->
+        <div class="bg-indigo-50/70 dark:bg-indigo-950/40 p-4 rounded-xl border border-indigo-200 dark:border-indigo-900 space-y-3">
+          <label class="block text-xs font-bold uppercase text-indigo-900 dark:text-indigo-200">
+            URL do Web App (Google Apps Script) para Sincronizar Celular ↔ PC
+          </label>
+          <div class="flex flex-col sm:flex-row gap-2">
+            <input type="url" id="cloudWebhookUrl" placeholder="https://script.google.com/macros/s/SEU_CODIGO/exec" class="flex-1 px-3.5 py-2.5 rounded-xl bg-white dark:bg-slate-900 border border-indigo-200 dark:border-indigo-800 text-xs sm:text-sm focus:outline-none focus:ring-2 focus:ring-indigo-500" />
+            <button onclick="saveCloudUrl()" class="px-4 py-2.5 rounded-xl bg-indigo-600 hover:bg-indigo-700 text-white text-xs font-bold whitespace-nowrap">
+              Salvar URL
+            </button>
+          </div>
+          <div class="flex flex-wrap gap-2 pt-1">
+            <button onclick="syncToCloud()" class="flex-1 py-2.5 px-4 rounded-xl bg-emerald-600 hover:bg-emerald-700 text-white text-xs font-bold flex items-center justify-center gap-2 shadow-sm">
+              <i class="ph-bold ph-cloud-arrow-up text-base"></i>
+              Enviar Dados para Nuvem (Salvar)
+            </button>
+            <button onclick="loadFromCloud()" class="flex-1 py-2.5 px-4 rounded-xl bg-slate-800 hover:bg-slate-700 text-white text-xs font-bold flex items-center justify-center gap-2 shadow-sm">
+              <i class="ph-bold ph-cloud-arrow-down text-base"></i>
+              Baixar Dados da Nuvem (Carregar)
+            </button>
+          </div>
+        </div>
+
+        <!-- Passo a Passo GitHub + Google Sheets -->
+        <div class="space-y-3">
+          <h4 class="font-bold text-xs uppercase tracking-wider text-slate-400">Como publicar no GitHub e sincronizar com sua Planilha Google:</h4>
+          <ol class="list-decimal list-inside space-y-2 text-xs sm:text-sm text-slate-600 dark:text-slate-300">
+            <li>No seu <strong>GitHub</strong>, crie um repositório novo, envie este arquivo com o nome <code class="px-1.5 py-0.5 rounded bg-slate-100 dark:bg-slate-800 font-mono">index.html</code> e ative o <strong>GitHub Pages</strong> em <em>Settings → Pages</em>.</li>
+            <li>Para que o celular e o computador compartilhem os lançamentos automaticamente, crie uma Planilha no Google Drive, clique em <strong>Extensões → Apps Script</strong> e cole o código abaixo:</li>
+          </ol>
+
+          <div class="relative">
+            <pre id="gasCodeBlock" class="p-3.5 rounded-xl bg-slate-900 text-emerald-300 font-mono text-[11px] overflow-x-auto leading-relaxed">function doGet(e) {
+  var prop = PropertiesService.getScriptProperties().getProperty('APTO301_DATA');
+  return ContentService.createTextOutput(prop || '{}')
+    .setMimeType(ContentService.MimeType.JSON);
+}
+
+function doPost(e) {
+  var body = e.postData.contents;
+  PropertiesService.getScriptProperties().setProperty('APTO301_DATA', body);
+  return ContentService.createTextOutput(JSON.stringify({status: 'ok'}))
+    .setMimeType(ContentService.MimeType.JSON);
+}</pre>
+            <button onclick="copyGasCode()" class="absolute top-2.5 right-2.5 px-2.5 py-1 rounded-lg bg-white/10 hover:bg-white/20 text-white text-xs font-semibold flex items-center gap-1">
+              <i class="ph-bold ph-copy"></i> Copiar Código
+            </button>
+          </div>
+
+          <p class="text-xs text-slate-500 dark:text-slate-400">
+            Depois clique em <strong>Implantar → Nova implantação → App da Web</strong> (Quem pode acessar: <em>Qualquer pessoa</em>), copie a URL gerada e cole no campo acima!
+          </p>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ===================================================================== -->
+  <!-- MODAL 5: BACKUP JSON / RESTAURAR DADOS ORIGINAIS                      -->
+  <!-- ===================================================================== -->
+  <div id="modalBackup" class="fixed inset-0 z-50 hidden bg-slate-950/60 backdrop-blur-sm flex items-center justify-center p-4">
+    <div class="bg-white dark:bg-slate-900 rounded-2xl max-w-md w-full border border-slate-200 dark:border-slate-800 shadow-2xl overflow-hidden">
+      <div class="px-5 py-4 border-b border-slate-200 dark:border-slate-800 flex items-center justify-between">
+        <h3 class="font-bold text-base">Backup & Exportação de Dados</h3>
+        <button onclick="closeBackupModal()" class="p-1.5 rounded-lg text-slate-400 hover:bg-slate-100 dark:hover:bg-slate-800">
+          <i class="ph-bold ph-x text-lg"></i>
+        </button>
+      </div>
+      <div class="p-5 space-y-3">
+        <button onclick="exportBackupJSON()" class="w-full py-3 px-4 rounded-xl bg-emerald-600 hover:bg-emerald-700 text-white text-xs font-bold flex items-center justify-center gap-2">
+          <i class="ph-bold ph-download-simple text-base"></i>
+          Baixar Backup Completo (.JSON)
+        </button>
+
+        <label class="w-full py-3 px-4 rounded-xl bg-indigo-600 hover:bg-indigo-700 text-white text-xs font-bold flex items-center justify-center gap-2 cursor-pointer">
+          <i class="ph-bold ph-upload-simple text-base"></i>
+          Importar Backup (.JSON)
+          <input type="file" accept=".json" onchange="importBackupJSON(event)" class="hidden" />
+        </label>
+
+        <button onclick="exportToCSV()" class="w-full py-3 px-4 rounded-xl bg-slate-800 hover:bg-slate-700 text-white text-xs font-bold flex items-center justify-center gap-2">
+          <i class="ph-bold ph-file-csv text-base"></i>
+          Exportar Tudo para Planilha (.CSV / Excel)
+        </button>
+
+        <div class="pt-3 border-t border-slate-200 dark:border-slate-800">
+          <button onclick="resetToFactoryDefaults()" class="w-full py-2.5 px-4 rounded-xl bg-rose-50 hover:bg-rose-100 text-rose-700 dark:bg-rose-950/50 dark:text-rose-300 text-xs font-bold flex items-center justify-center gap-2">
+            <i class="ph-bold ph-arrow-counter-clockwise"></i>
+            Restaurar Dados Originais das Planilhas
+          </button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- TOAST NOTIFICATION -->
+  <div id="toastContainer" class="fixed bottom-20 md:bottom-6 right-4 z-50 hidden">
+    <div class="bg-slate-900 dark:bg-white text-white dark:text-slate-900 px-4 py-3 rounded-xl shadow-xl border border-slate-700 flex items-center gap-2.5 text-xs sm:text-sm font-semibold">
+      <i class="ph-fill ph-check-circle text-emerald-400 dark:text-emerald-600 text-lg"></i>
+      <span id="toastMessage">Salvo com sucesso!</span>
+    </div>
+  </div>
+
+  <!-- ===================================================================== -->
+  <!-- APPLICATION LOGIC & PRE-LOADED SPREADSHEET DATA                       -->
+  <!-- ===================================================================== -->
+  <script>
+    const STORAGE_KEY = 'APTO301_PATRIMONIO_STATE_V1';
+    const CLOUD_URL_KEY = 'APTO301_CLOUD_URL';
+
+    // Dados originais exatos extraídos das 2 planilhas enviadas pelo usuário
+    function getInitialDefaultData() {
+      return {
+        config: {
+          valorVenda: 290000.00,
+          valorFgts: 15000.00,
+          valorFinanciado: 211409.32,
+          totalParcelas: 360
+        },
+        // Planilha 1: Parcelas Mensais Pagas (12 parcelas = R$ 30.432,91)
+        parcelasPagas: [
+          { id: 'p1',  data: '2025-12-12', qtd: 1, valor: 2552.27 },
+          { id: 'p2',  data: '2026-01-12', qtd: 1, valor: 2546.96 },
+          { id: 'p3',  data: '2026-02-12', qtd: 1, valor: 2515.47 },
+          { id: 'p4',  data: '2026-03-12', qtd: 1, valor: 2543.25 },
+          { id: 'p5',  data: '2026-04-12', qtd: 1, valor: 2541.52 },
+          { id: 'p6',  data: '2026-05-12', qtd: 1, valor: 2538.98 },
+          { id: 'p7',  data: '2026-06-12', qtd: 1, valor: 2537.37 },
+          { id: 'p8',  data: '2026-07-12', qtd: 1, valor: 2535.66 },
+          { id: 'p9',  data: '2026-08-12', qtd: 1, valor: 2533.98 },
+          { id: 'p10', data: '2026-09-12', qtd: 1, valor: 2531.94 },
+          { id: 'p11', data: '2026-10-12', qtd: 1, valor: 2529.00 },
+          { id: 'p12', data: '2026-11-12', qtd: 1, valor: 2526.51 }
+        ],
+        // Planilha 1: Amortizações (70 parcelas = R$ 11.769,00)
+        amortizacoes: [
+          { id: 'a1', data: '2025-11-19', qtd: 3,  valor: 422.00 },
+          { id: 'a2', data: '2025-11-26', qtd: 6,  valor: 859.00 },
+          { id: 'a3', data: '2025-12-23', qtd: 10, valor: 1490.00 },
+          { id: 'a4', data: '2026-04-03', qtd: 22, valor: 3575.00 },
+          { id: 'a5', data: '2026-07-22', qtd: 7,  valor: 1228.00 },
+          { id: 'a6', data: '2026-09-01', qtd: 12, valor: 2225.00 },
+          { id: 'a7', data: '2026-10-05', qtd: 10, valor: 1970.00 }
+        ],
+        // Planilha 1: Detalhamento da Entrada (R$ 65.000,00)
+        entradaItens: [
+          { id: 'e1', descricao: 'Comissão Imobiliaria 1/2',        data: '2025-10-16', valor: 7514.00 },
+          { id: 'e2', descricao: 'Comissão Imobiliaria 2/2',        data: '2025-11-14', valor: 5278.00 },
+          { id: 'e3', descricao: 'Comissão Alexandre 1/2',          data: '2026-10-16', valor: 2186.00 },
+          { id: 'e4', descricao: 'Comissão Alexandre 2/2',          data: '2025-11-14', valor: 622.00 },
+          { id: 'e5', descricao: 'Proprietário Anderson Russo 1/2', data: '2025-10-16', valor: 8300.00 },
+          { id: 'e6', descricao: 'Proprietário Anderson Russo 2/3', data: '2025-11-17', valor: 40100.00 },
+          { id: 'e7', descricao: 'Proprietário Anderson Russo 3/3', data: '2025-11-17', valor: 1000.00 }
+        ],
+        // Planilha 1: Outros Gastos na Compra (R$ 20.249,51)
+        outrosGastosCompra: [
+          { id: 'oc1',  descricao: '99 moto entrega Gorjeta',               data: '2025-10-13', valor: 9.00 },
+          { id: 'oc2',  descricao: 'Despachante Imobiliario 1/2',           data: '2025-10-20', valor: 490.00 },
+          { id: 'oc3',  descricao: 'Despachante Imobiliario 2/2',           data: '2025-11-19', valor: 490.00 },
+          { id: 'oc4',  descricao: 'Taxa Laudo Avaliação da Caixa',         data: '2025-10-20', valor: 750.00 },
+          { id: 'oc5',  descricao: 'Taxa Cartório Procuração',              data: '2025-11-28', valor: 106.00 },
+          { id: 'oc6',  descricao: '99 Pop - Assinatura Caixa',             data: '2025-11-17', valor: 11.43 },
+          { id: 'oc7',  descricao: 'Registro Cartório 1/6 divido no cartão',data: '2025-12-07', valor: 954.81 },
+          { id: 'oc8',  descricao: 'Registro Cartório 2/6 divido no cartão',data: '2025-12-07', valor: 954.77 },
+          { id: 'oc9',  descricao: 'Registro Cartório 3/6 divido no cartão',data: '2025-12-07', valor: 954.77 },
+          { id: 'oc10', descricao: 'Registro Cartório 4/6 divido no cartão',data: '2025-12-07', valor: 954.77 },
+          { id: 'oc11', descricao: 'Registro Cartório 5/6 divido no cartão',data: '2025-12-07', valor: 954.77 },
+          { id: 'oc12', descricao: 'Registro Cartório 6/6 divido no cartão',data: '2025-12-07', valor: 954.77 },
+          { id: 'oc13', descricao: 'Taxa Cartório',                         data: '2025-11-17', valor: 65.00 },
+          { id: 'oc14', descricao: 'ITBI Registro Prefeitura',              data: '2025-11-17', valor: 10281.69 },
+          { id: 'oc15', descricao: 'Cópia Chave Portão',                    data: '2026-12-08', valor: 20.00 },
+          { id: 'oc16', descricao: 'Retirada Guardaroupa velho',            data: '2026-01-16', valor: 100.00 },
+          { id: 'oc17', descricao: 'Caixa Tarifa Seguro',                   data: '2025-11-17', valor: 2106.63 },
+          { id: 'oc18', descricao: 'Controle Portão Prédio',                data: '2026-04-11', valor: 39.90 },
+          { id: 'oc19', descricao: 'Configuração Controle Portão Prédio',   data: '2026-04-14', valor: 40.00 },
+          { id: 'oc20', descricao: '99 moto entregra',                      data: '2025-10-13', valor: 11.20 }
+        ],
+        // Planilha 1: Reformas e Melhorias no Apto (R$ 4.916,10)
+        reformasMelhorias: [
+          { id: 'r1',  descricao: 'Janela Área + Armario Vidro Cozinha + Espelhos 1/2', data: '2025-12-13', valor: 1200.00 },
+          { id: 'r2',  descricao: 'Janela Área + Armario Vidro Cozinha + Espelhos 2/2', data: '2025-01-21', valor: 1250.00 },
+          { id: 'r3',  descricao: 'Insulfilme Janelas e Porta',                         data: '2026-01-22', valor: 680.00 },
+          { id: 'r4',  descricao: 'Insulfilme Janelas',                                 data: '2026-04-27', valor: 220.00 },
+          { id: 'r5',  descricao: 'Tomadas Novas 1/2',                                  data: '2025-11-19', valor: 106.10 },
+          { id: 'r6',  descricao: 'Tomadas Novas 2/2',                                  data: '2025-12-11', valor: 55.00 },
+          { id: 'r7',  descricao: 'Troca de Tomadas Novas',                             data: '2025-12-12', valor: 600.00 },
+          { id: 'r8',  descricao: 'Interfone Novo',                                     data: '2026-01-14', valor: 180.00 },
+          { id: 'r9',  descricao: 'Registro Gás',                                       data: '2025-12-17', valor: 560.00 },
+          { id: 'r10', descricao: 'Campainha',                                          data: '2026-03-31', valor: 65.00 }
+        ],
+        // Planilha 2 Separada: Móveis, Eletrônicos, Eletrodomésticos e Utilidades (55 itens)
+        moveisEletros: [
+          { id: 'm1',  data: '2025-10-20', descricao: 'Cabeceira Cama Casal',                         tipo: 'móvel',                    comodo: 'Quarto Suite',  pagamento: 'Cartão de Crédito', valor: 100.00, prazo: '12x',    loja: 'Mercado Livre', destino: 'uso' },
+          { id: 'm2',  data: '2025-10-20', descricao: 'Cama Box Casal',                               tipo: 'móvel',                    comodo: 'Quarto Suite',  pagamento: 'Cartão de Crédito', valor: 100.00, prazo: '12x',    loja: 'Mercado Livre', destino: 'uso' },
+          { id: 'm3',  data: '2025-10-20', descricao: 'Colchão Casal Emma',                           tipo: 'móvel',                    comodo: 'Quarto Suite',  pagamento: 'Cartão de Crédito', valor: 100.00, prazo: '12x',    loja: 'Mercado Livre', destino: 'uso' },
+          { id: 'm4',  data: '2025-10-20', descricao: 'Fruteira',                                     tipo: 'móvel',                    comodo: 'Cozinha',       pagamento: 'Cartão de Crédito', valor: 100.00, prazo: '12x',    loja: 'Mercado Livre', destino: 'uso' },
+          { id: 'm5',  data: '2025-10-20', descricao: 'Mesa de Jantar 4 Lugares',                     tipo: 'móvel',                    comodo: 'Sala',          pagamento: 'Cartão de Crédito', valor: 100.00, prazo: '10x',    loja: 'Shopee',        destino: 'uso' },
+          { id: 'm6',  data: '2025-11-11', descricao: 'Suporte Botijão Gás',                          tipo: 'utilidade',                comodo: 'Area',          pagamento: 'PIX',               valor: 100.00, prazo: 'a vista',loja: 'Shopee',        destino: 'uso' },
+          { id: 'm7',  data: '2025-11-12', descricao: 'Maquina Lava e Seca',                          tipo: 'eletrodoméstico',          comodo: 'Lavanderia',    pagamento: 'Cartão de Crédito', valor: 100.00, prazo: '12x',    loja: 'Mercado Livre', destino: 'uso' },
+          { id: 'm8',  data: '2025-11-17', descricao: 'Sofá Retratil 2 lugares',                      tipo: 'móvel',                    comodo: 'Sala',          pagamento: 'Cartão de Crédito', valor: 100.00, prazo: '10x',    loja: 'Shopee',        destino: 'uso' },
+          { id: 'm9',  data: '2025-11-18', descricao: '2 Armarios Banheiro',                          tipo: 'móvel',                    comodo: 'Banheiros',     pagamento: 'Cartão de Crédito', valor: 100.00, prazo: '12x',    loja: 'Shopee',        destino: 'fica' },
+          { id: 'm10', data: '2025-11-18', descricao: 'Armario Lavanderia',                           tipo: 'móvel',                    comodo: 'Lavanderia',    pagamento: 'Cartão de Crédito', valor: 100.00, prazo: '12x',    loja: 'Shopee',        destino: 'uso' },
+          { id: 'm11', data: '2025-11-18', descricao: 'Chuveiro',                                     tipo: 'utilidade',                comodo: 'Quarto Suite',  pagamento: 'Cartão de Crédito', valor: 100.00, prazo: '12x',    loja: 'Shopee',        destino: 'fica' },
+          { id: 'm12', data: '2025-11-18', descricao: 'Escorredor de Louça suspenso',                 tipo: 'utilidade',                comodo: 'Cozinha',       pagamento: 'Cartão de Crédito', valor: 100.00, prazo: '12x',    loja: 'Shopee',        destino: 'uso' },
+          { id: 'm13', data: '2025-11-18', descricao: 'Prateleira Cozinha',                           tipo: 'utilidade',                comodo: 'Cozinha',       pagamento: 'Cartão de Crédito', valor: 100.00, prazo: '12x',    loja: 'Shopee',        destino: 'fica' },
+          { id: 'm14', data: '2025-11-18', descricao: 'Ralo Banheiro',                                tipo: 'melhoria apto',            comodo: 'Banheiros',     pagamento: 'Cartão de Crédito', valor: 100.00, prazo: '12x',    loja: 'Shopee',        destino: 'fica' },
+          { id: 'm15', data: '2025-11-18', descricao: 'Torneira Cozinha',                             tipo: 'melhoria apto',            comodo: 'Cozinha',       pagamento: 'Cartão de Crédito', valor: 100.00, prazo: '12x',    loja: 'Shopee',        destino: 'fica' },
+          { id: 'm16', data: '2025-11-18', descricao: 'Torneira Lavanderia',                          tipo: 'melhoria apto',            comodo: 'Lavanderia',    pagamento: 'Cartão de Crédito', valor: 100.00, prazo: '12x',    loja: 'Shopee',        destino: 'fica' },
+          { id: 'm17', data: '2025-11-18', descricao: 'Trava Porta',                                  tipo: 'melhoria apto',            comodo: 'APTO',          pagamento: 'Cartão de Crédito', valor: 100.00, prazo: '12x',    loja: 'Shopee',        destino: 'fica' },
+          { id: 'm18', data: '2025-11-18', descricao: 'Varal de Teto',                                tipo: 'melhoria apto',            comodo: 'Area',          pagamento: 'Cartão de Crédito', valor: 100.00, prazo: '12x',    loja: 'Shopee',        destino: 'fica' },
+          { id: 'm19', data: '2025-11-19', descricao: 'Geladeira',                                    tipo: 'eletrodoméstico',          comodo: 'Cozinha',       pagamento: 'Cartão de Crédito', valor: 100.00, prazo: '12x',    loja: 'Magazine Luiza',destino: 'uso' },
+          { id: 'm20', data: '2025-11-19', descricao: 'Interruptores tomada',                         tipo: 'melhoria apto',            comodo: 'APTO',          pagamento: 'Cartão de Crédito', valor: 100.00, prazo: '3x',     loja: 'Mercado Livre', destino: 'fica' },
+          { id: 'm21', data: '2025-11-19', descricao: 'Mangueira Máquina de Lavar',                   tipo: 'utilidade',                comodo: 'Lavanderia',    pagamento: 'Cartão de Crédito', valor: 100.00, prazo: '3x',     loja: 'Mercado Livre', destino: 'uso' },
+          { id: 'm22', data: '2025-11-19', descricao: 'Puxadores armario cozinha',                    tipo: 'melhoria apto',            comodo: 'Cozinha',       pagamento: 'Cartão de Crédito', valor: 100.00, prazo: '3x',     loja: 'Mercado Livre', destino: 'fica' },
+          { id: 'm23', data: '2025-11-19', descricao: 'Suporte TV',                                   tipo: 'utilidade',                comodo: 'Quarto Suite',  pagamento: 'Cartão de Crédito', valor: 100.00, prazo: '3x',     loja: 'Mercado Livre', destino: 'uso' },
+          { id: 'm24', data: '2025-11-22', descricao: 'Fechadura Digital Porta Sala',                 tipo: 'melhoria apto',            comodo: 'Sala',          pagamento: 'Cartão de Crédito', valor: 100.00, prazo: '12x',    loja: 'Amazon',        destino: 'fica' },
+          { id: 'm25', data: '2025-11-28', descricao: 'Fogão 5 bocas',                                tipo: 'eletrodoméstico',          comodo: 'Cozinha',       pagamento: 'Cartão de Crédito', valor: 100.00, prazo: '10x',    loja: 'Amazon',        destino: 'uso' },
+          { id: 'm26', data: '2025-12-03', descricao: 'Lampadas',                                     tipo: 'melhoria apto',            comodo: 'APTO',          pagamento: 'PIX',               valor: 100.00, prazo: 'a vista',loja: 'Shopee',        destino: 'fica' },
+          { id: 'm27', data: '2025-12-03', descricao: 'Luminaria',                                    tipo: 'melhoria apto',            comodo: 'APTO',          pagamento: 'PIX',               valor: 100.00, prazo: 'a vista',loja: 'Shopee',        destino: 'fica' },
+          { id: 'm28', data: '2025-12-03', descricao: 'Olho Magico Porta Sala',                       tipo: 'melhoria apto',            comodo: 'Sala',          pagamento: 'PIX',               valor: 100.00, prazo: 'a vista',loja: 'Shopee',        destino: 'fica' },
+          { id: 'm29', data: '2025-12-03', descricao: 'Protetor Porta',                               tipo: 'utilidade',                comodo: 'Sala',          pagamento: 'PIX',               valor: 100.00, prazo: 'a vista',loja: 'Shopee',        destino: 'uso' },
+          { id: 'm30', data: '2025-12-03', descricao: 'Suporte Vassoura',                             tipo: 'utilidade',                comodo: 'Area',          pagamento: 'PIX',               valor: 100.00, prazo: 'a vista',loja: 'Shopee',        destino: 'uso' },
+          { id: 'm31', data: '2025-12-03', descricao: 'Torneira Banheiro',                            tipo: 'melhoria apto',            comodo: 'Banheiros',     pagamento: 'PIX',               valor: 100.00, prazo: 'a vista',loja: 'Shopee',        destino: 'fica' },
+          { id: 'm32', data: '2025-12-09', descricao: 'Capas cadeiras mesa de jantar',                tipo: 'decoração',                comodo: 'Sala',          pagamento: 'PIX',               valor: 100.00, prazo: 'a vista',loja: 'Shopee',        destino: 'uso' },
+          { id: 'm33', data: '2025-12-09', descricao: 'Tinta para Azulejo Banheiro e Cozinha',        tipo: 'reforma/manutenção apto',  comodo: 'APTO',          pagamento: 'Cartão de Crédito', valor: 100.00, prazo: '2x',     loja: 'Mercado Livre', destino: 'fica' },
+          { id: 'm34', data: '2025-12-11', descricao: 'Interruptores tomada',                         tipo: 'melhoria apto',            comodo: 'APTO',          pagamento: 'PIX',               valor: 100.00, prazo: 'a vista',loja: 'Mercado Livre', destino: 'fica' },
+          { id: 'm35', data: '2025-12-11', descricao: 'Prateleira Quarto',                            tipo: 'utilidade',                comodo: 'Quarto Suite',  pagamento: 'PIX',               valor: 100.00, prazo: 'a vista',loja: 'Mercado Livre', destino: 'uso' },
+          { id: 'm36', data: '2025-12-17', descricao: 'Filtro de Barro',                              tipo: 'utilidade',                comodo: 'Cozinha',       pagamento: 'PIX',               valor: 100.00, prazo: 'a vista',loja: 'Mercado Livre', destino: 'uso' },
+          { id: 'm37', data: '2025-12-18', descricao: 'Persiana Cozinha',                             tipo: 'melhoria apto',            comodo: 'Cozinha',       pagamento: 'Cartão de Crédito', valor: 100.00, prazo: '3x',     loja: 'Mercado Livre', destino: 'fica' },
+          { id: 'm38', data: '2025-12-18', descricao: 'Tapete Sala',                                  tipo: 'decoração',                comodo: 'Sala',          pagamento: 'Cartão de Crédito', valor: 100.00, prazo: '3x',     loja: 'Mercado Livre', destino: 'uso' },
+          { id: 'm39', data: '2025-12-27', descricao: 'Airfryer',                                     tipo: 'eletrodoméstico',          comodo: 'Cozinha',       pagamento: 'Cartão de Crédito', valor: 100.00, prazo: '4x',     loja: 'Mercado Livre', destino: 'uso' },
+          { id: 'm40', data: '2026-01-03', descricao: 'Escada',                                       tipo: 'utilidade',                comodo: 'Area',          pagamento: 'Cartão de Crédito', valor: 100.00, prazo: '3x',     loja: 'Mercado Livre', destino: 'uso' },
+          { id: 'm41', data: '2026-01-13', descricao: 'Interfone',                                    tipo: 'reforma/manutenção apto',  comodo: 'Cozinha',       pagamento: 'Cartão de Crédito', valor: 100.00, prazo: '2x',     loja: 'Mercado Livre', destino: 'fica' },
+          { id: 'm42', data: '2026-01-15', descricao: 'Microondas',                                   tipo: 'eletrodoméstico',          comodo: 'Cozinha',       pagamento: 'Cartão de Crédito', valor: 100.00, prazo: '12x',    loja: 'Mercado Livre', destino: 'uso' },
+          { id: 'm43', data: '2026-01-19', descricao: '2 Criado Mudo Quarto Casal',                   tipo: 'móvel',                    comodo: 'Quarto Suite',  pagamento: 'Cartão de Crédito', valor: 100.00, prazo: '4x',     loja: 'Mercado Livre', destino: 'uso' },
+          { id: 'm44', data: '2026-01-19', descricao: 'Armario Cozinha',                              tipo: 'móvel',                    comodo: 'Cozinha',       pagamento: 'Cartão de Crédito', valor: 100.00, prazo: '10x',    loja: 'Shopee',        destino: 'uso' },
+          { id: 'm45', data: '2026-01-19', descricao: 'Cortina Sala e Quarto',                        tipo: 'decoração',                comodo: 'Sala',          pagamento: 'Cartão de Crédito', valor: 100.00, prazo: '4x',     loja: 'Mercado Livre', destino: 'uso' },
+          { id: 'm46', data: '2026-01-19', descricao: 'Varão Cortina Sala e Quarto',                  tipo: 'utilidade',                comodo: 'Sala',          pagamento: 'Cartão de Crédito', valor: 100.00, prazo: '4x',     loja: 'Mercado Livre', destino: 'fica' },
+          { id: 'm47', data: '2026-01-21', descricao: 'Guarda Roupa Casal',                           tipo: 'móvel',                    comodo: 'Quarto Suite',  pagamento: 'Cartão de Crédito', valor: 100.00, prazo: '12x',    loja: 'Mercado Livre', destino: 'uso' },
+          { id: 'm48', data: '2026-01-24', descricao: 'Aparador Cantinho do Café',                    tipo: 'móvel',                    comodo: 'Sala',          pagamento: 'Cartão de Crédito', valor: 100.00, prazo: '5x',     loja: 'Mercado Livre', destino: 'uso' },
+          { id: 'm49', data: '2026-01-24', descricao: 'Sapateira',                                    tipo: 'móvel',                    comodo: 'Quarto Suite',  pagamento: 'Cartão de Crédito', valor: 100.00, prazo: '5x',     loja: 'Mercado Livre', destino: 'uso' },
+          { id: 'm50', data: '2026-02-02', descricao: 'Mop Giratório Limpeza',                        tipo: 'utilidade',                comodo: 'Area',          pagamento: 'PIX',               valor: 100.00, prazo: 'a vista',loja: 'Mercado Livre', destino: 'uso' },
+          { id: 'm51', data: '2026-02-19', descricao: 'Robô Aspirador',                               tipo: 'eletrônico',               comodo: 'Area',          pagamento: 'Cartão de Crédito', valor: 100.00, prazo: '3x',     loja: 'Shopee',        destino: 'uso' },
+          { id: 'm52', data: '2026-02-19', descricao: 'Ventilador de Coluna',                         tipo: 'eletrodoméstico',          comodo: 'Quarto Suite',  pagamento: 'Cartão de Crédito', valor: 100.00, prazo: '3x',     loja: 'Mercado Livre', destino: 'uso' },
+          { id: 'm53', data: '2026-03-03', descricao: '2 banquetas cozinha',                          tipo: 'utilidade',                comodo: 'Cozinha',       pagamento: 'Cartão de Crédito', valor: 100.00, prazo: '4x',     loja: 'Mercado Livre', destino: 'uso' },
+          { id: 'm54', data: '2026-03-09', descricao: 'Campainha sem fio',                            tipo: 'melhoria apto',            comodo: 'APTO',          pagamento: 'PIX',               valor: 100.00, prazo: 'a vista',loja: 'Shopee',        destino: 'fica' },
+          { id: 'm55', data: '2026-03-27', descricao: 'Guarda Roupa Solteiro + Cômoda + Painel TV Sala', tipo: 'móvel',                 comodo: 'Quarto Visita', pagamento: 'Cartão de Crédito', valor: 100.00, prazo: '12x',    loja: 'Mercado Livre', destino: 'uso' }
+        ]
+      };
+    }
+
+    let appState = loadState();
+    let currentMainTab = 'imovel';
+    let currentImovelSubTab = 'parcelas';
+
+    function loadState() {
+      try {
+        const raw = localStorage.getItem(STORAGE_KEY);
+        if (!raw) return getInitialDefaultData();
+        const parsed = JSON.parse(raw);
+        return { ...getInitialDefaultData(), ...parsed };
+      } catch (e) {
+        console.error('Erro ao carregar LocalStorage:', e);
+        return getInitialDefaultData();
+      }
+    }
+
+    function saveState(toastMsg) {
+      try {
+        localStorage.setItem(STORAGE_KEY, JSON.stringify(appState));
+        renderAll();
+        if (toastMsg) showToast(toastMsg);
+      } catch (e) {
+        console.error('Erro ao salvar estado:', e);
+      }
+    }
+
+    // Formatadores
+    function formatBRL(val) {
+      const n = Number(val) || 0;
+      return n.toLocaleString('pt-BR', { style: 'currency', currency: 'BRL' });
+    }
+
+    function formatDateBR(isoStr) {
+      if (!isoStr) return '-';
+      const parts = isoStr.split('-');
+      if (parts.length !== 3) return isoStr;
+      return `${parts[2]}/${parts[1]}/${parts[0]}`;
+    }
+
+    // Navegação Principal (Abas 1, 2 e 3)
+    function switchMainTab(tab) {
+      currentMainTab = tab;
+      ['imovel', 'moveis', 'resumo'].forEach(t => {
+        const view = document.getElementById(`view-${t}`);
+        const deskBtn = document.getElementById(`deskTab-${t}`);
+        const mobBtn = document.getElementById(`mobTab-${t}`);
+        const isActive = (t === tab);
+
+        if (view) view.classList.toggle('hidden', !isActive);
+
+        if (deskBtn) {
+          deskBtn.className = isActive
+            ? 'main-tab-btn px-4 py-1.5 rounded-lg text-sm font-bold transition-all flex items-center gap-2 bg-white dark:bg-slate-900 text-emerald-600 dark:text-emerald-400 shadow-sm'
+            : 'main-tab-btn px-4 py-1.5 rounded-lg text-sm font-semibold transition-all flex items-center gap-2 text-slate-600 dark:text-slate-400 hover:text-slate-900 dark:hover:text-white';
+        }
+
+        if (mobBtn) {
+          mobBtn.className = isActive
+            ? 'flex flex-col items-center justify-center py-1 px-3 rounded-xl text-xs font-bold text-emerald-600 dark:text-emerald-400 bg-emerald-50 dark:bg-emerald-950/60'
+            : 'flex flex-col items-center justify-center py-1 px-3 rounded-xl text-xs font-medium text-slate-500 dark:text-slate-400';
+        }
+      });
+    }
+
+    // Sub-navegação da Parte 1 (Imóvel)
+    function switchImovelSubTab(sub) {
+      currentImovelSubTab = sub;
+      ['parcelas', 'compra', 'reformas'].forEach(s => {
+        const view = document.getElementById(`subView-${s}`);
+        const btn = document.getElementById(`subTab-${s}`);
+        const isActive = (s === sub);
+        if (view) view.classList.toggle('hidden', !isActive);
+        if (btn) {
+          btn.className = isActive
+            ? 'imovel-subtab px-4 py-2.5 rounded-xl text-xs sm:text-sm font-bold whitespace-nowrap transition flex items-center gap-2 bg-slate-900 text-white dark:bg-emerald-500 dark:text-slate-950 shadow-sm'
+            : 'imovel-subtab px-4 py-2.5 rounded-xl text-xs sm:text-sm font-semibold whitespace-nowrap transition flex items-center gap-2 bg-white dark:bg-slate-900 text-slate-600 dark:text-slate-400 border border-slate-200 dark:border-slate-800 hover:bg-slate-100';
+        }
+      });
+    }
+
+    // =====================================================================
+    // RENDERIZAÇÃO COMPLETA DOS INDICADORES E TABELAS
+    // =====================================================================
+    function renderAll() {
+      // Cálculos da Parte 1 (Imóvel)
+      const qtdPagas = appState.parcelasPagas.reduce((acc, i) => acc + (Number(i.qtd) || 0), 0);
+      const somaParcelas = appState.parcelasPagas.reduce((acc, i) => acc + (Number(i.valor) || 0), 0);
+
+      const qtdAmortizadas = appState.amortizacoes.reduce((acc, i) => acc + (Number(i.qtd) || 0), 0);
+      const somaAmortizacoes = appState.amortizacoes.reduce((acc, i) => acc + (Number(i.valor) || 0), 0);
+      const mediaAmortizacao = qtdAmortizadas > 0 ? (somaAmortizacoes / qtdAmortizadas) : 0;
+
+      const somaEntrada = appState.entradaItens.reduce((acc, i) => acc + (Number(i.valor) || 0), 0);
+      const valorFgts = Number(appState.config.valorFgts) || 0;
+      const somaOutrosCompra = appState.outrosGastosCompra.reduce((acc, i) => acc + (Number(i.valor) || 0), 0);
+      const somaReformas = appState.reformasMelhorias.reduce((acc, i) => acc + (Number(i.valor) || 0), 0);
+
+      const totalParcelasContrato = Number(appState.config.totalParcelas) || 360;
+      const parcelasEliminadas = qtdPagas + qtdAmortizadas;
+      const parcelasRestantes = Math.max(0, totalParcelasContrato - parcelasEliminadas);
+      const percQuitado = totalParcelasContrato > 0 ? ((parcelasEliminadas / totalParcelasContrato) * 100) : 0;
+
+      // Total Pago no Imóvel (Planilha 1)
+      const totalPagoImovel = somaEntrada + valorFgts + somaParcelas + somaAmortizacoes + somaOutrosCompra + somaReformas;
+
+      // Atualiza Banner e Cards da Parte 1
+      document.getElementById('kpiTotalPagoImovel').textContent = formatBRL(totalPagoImovel);
+      document.getElementById('kpiParcelasEliminadas').textContent = parcelasEliminadas;
+      document.getElementById('kpiTotalParcelasContrato').textContent = totalParcelasContrato;
+      document.getElementById('kpiPercentualPrazo').textContent = `${percQuitado.toFixed(1).replace('.', ',')}%`;
+
+      document.getElementById('barLabelPagas').textContent = qtdPagas;
+      document.getElementById('barLabelAmortizadas').textContent = qtdAmortizadas;
+      document.getElementById('barLabelRestantes').textContent = `${parcelasRestantes} parcelas`;
+
+      const pctPagasWidth = Math.min(100, (qtdPagas / totalParcelasContrato) * 100);
+      const pctAmortWidth = Math.min(100 - pctPagasWidth, (qtdAmortizadas / totalParcelasContrato) * 100);
+      document.getElementById('progressPagas').style.width = `${pctPagasWidth}%`;
+      document.getElementById('progressAmortizadas').style.width = `${pctAmortWidth}%`;
+
+      document.getElementById('cardValorVenda').textContent = formatBRL(appState.config.valorVenda);
+      document.getElementById('cardValorFinanciado').textContent = formatBRL(appState.config.valorFinanciado);
+      document.getElementById('cardEntradaMaisFgts').textContent = formatBRL(somaEntrada + valorFgts);
+      document.getElementById('cardDetalheEntrada').textContent = formatBRL(somaEntrada);
+      document.getElementById('cardDetalheFgts').textContent = formatBRL(valorFgts);
+
+      document.getElementById('cardSomaParcelas').textContent = formatBRL(somaParcelas);
+      document.getElementById('cardQtdParcelasPagas').textContent = qtdPagas;
+
+      document.getElementById('cardSomaAmortizacoes').textContent = formatBRL(somaAmortizacoes);
+      document.getElementById('cardQtdAmortizadas').textContent = qtdAmortizadas;
+      document.getElementById('cardMediaAmortizacao').textContent = formatBRL(mediaAmortizacao);
+
+      document.getElementById('cardSomaOutrosCompra').textContent = formatBRL(somaOutrosCompra);
+      document.getElementById('cardSomaReformas').textContent = formatBRL(somaReformas);
+      document.getElementById('cardQtdReformas').textContent = appState.reformasMelhorias.length;
+
+      // Renderiza tabelas da Parte 1
+      renderImovelTables(qtdPagas, somaParcelas, qtdAmortizadas, somaAmortizacoes, mediaAmortizacao, somaEntrada, somaOutrosCompra, somaReformas);
+
+      // Renderiza Parte 2 (Móveis, Eletros e Eletrônicos)
+      renderMoveisSection();
+
+      // Renderiza Parte 3 (Visão Consolidada)
+      renderResumoConsolidado(somaEntrada, valorFgts, somaParcelas, somaAmortizacoes, somaOutrosCompra, somaReformas, totalPagoImovel);
+    }
+
+    function renderImovelTables(qtdPagas, somaParcelas, qtdAmortizadas, somaAmortizacoes, mediaAmortizacao, somaEntrada, somaOutrosCompra, somaReformas) {
+      // 1. Parcelas Pagas
+      const tbodyP = document.getElementById('tbodyParcelasPagas');
+      tbodyP.innerHTML = appState.parcelasPagas.map((item, idx) => `
+        <tr class="hover:bg-slate-50 dark:hover:bg-slate-800/50 transition">
+          <td class="py-2.5 px-4 font-bold text-xs text-slate-400">${idx + 1}º</td>
+          <td class="py-2.5 px-4 font-medium">${formatDateBR(item.data)}</td>
+          <td class="py-2.5 px-4 text-center">
+            <span class="px-2 py-0.5 rounded-md text-xs font-bold bg-emerald-100 text-emerald-700 dark:bg-emerald-950 dark:text-emerald-300">${item.qtd}</span>
+          </td>
+          <td class="py-2.5 px-4 text-right font-bold text-slate-900 dark:text-white">${formatBRL(item.valor)}</td>
+          <td class="py-2.5 px-4 text-right">
+            <div class="inline-flex items-center gap-1">
+              <button onclick="editImovelItem('parcelasPagas', '${item.id}')" class="p-1.5 rounded-lg text-slate-400 hover:text-emerald-600 hover:bg-slate-100 dark:hover:bg-slate-800" title="Editar">
+                <i class="ph-bold ph-pencil-simple"></i>
+              </button>
+              <button onclick="deleteImovelItem('parcelasPagas', '${item.id}')" class="p-1.5 rounded-lg text-slate-400 hover:text-rose-600 hover:bg-rose-50 dark:hover:bg-rose-950/50" title="Excluir">
+                <i class="ph-bold ph-trash"></i>
+              </button>
+            </div>
+          </td>
+        </tr>
+      `).join('');
+      document.getElementById('tfootParcelasQtd').textContent = qtdPagas;
+      document.getElementById('tfootParcelasValor').textContent = formatBRL(somaParcelas);
+
+      // 2. Amortizações
+      const tbodyA = document.getElementById('tbodyAmortizacoes');
+      tbodyA.innerHTML = appState.amortizacoes.map(item => {
+        const media = (Number(item.qtd) || 0) > 0 ? (Number(item.valor) / Number(item.qtd)) : 0;
+        return `
+          <tr class="hover:bg-slate-50 dark:hover:bg-slate-800/50 transition">
+            <td class="py-2.5 px-4 font-medium">${formatDateBR(item.data)}</td>
+            <td class="py-2.5 px-4 text-center">
+              <span class="px-2 py-0.5 rounded-md text-xs font-bold bg-cyan-100 text-cyan-700 dark:bg-cyan-950 dark:text-cyan-300">-${item.qtd} parc.</span>
+            </td>
+            <td class="py-2.5 px-4 text-right font-bold text-slate-900 dark:text-white">${formatBRL(item.valor)}</td>
+            <td class="py-2.5 px-4 text-right text-xs text-slate-500">${formatBRL(media)}</td>
+            <td class="py-2.5 px-4 text-right">
+              <div class="inline-flex items-center gap-1">
+                <button onclick="editImovelItem('amortizacoes', '${item.id}')" class="p-1.5 rounded-lg text-slate-400 hover:text-cyan-600 hover:bg-slate-100 dark:hover:bg-slate-800" title="Editar">
+                  <i class="ph-bold ph-pencil-simple"></i>
+                </button>
+                <button onclick="deleteImovelItem('amortizacoes', '${item.id}')" class="p-1.5 rounded-lg text-slate-400 hover:text-rose-600 hover:bg-rose-50 dark:hover:bg-rose-950/50" title="Excluir">
+                  <i class="ph-bold ph-trash"></i>
+                </button>
+              </div>
+            </td>
+          </tr>
+        `;
+      }).join('');
+      document.getElementById('tfootAmortQtd').textContent = qtdAmortizadas;
+      document.getElementById('tfootAmortValor').textContent = formatBRL(somaAmortizacoes);
+      document.getElementById('tfootAmortMedia').textContent = formatBRL(mediaAmortizacao);
+
+      // 3. Entrada Itens
+      const tbodyE = document.getElementById('tbodyEntradaItens');
+      tbodyE.innerHTML = appState.entradaItens.map(item => `
+        <tr class="hover:bg-slate-50 dark:hover:bg-slate-800/50 transition">
+          <td class="py-2.5 px-4 font-medium">${item.descricao}</td>
+          <td class="py-2.5 px-3 text-xs text-slate-500 whitespace-nowrap">${formatDateBR(item.data)}</td>
+          <td class="py-2.5 px-4 text-right font-bold whitespace-nowrap">${formatBRL(item.valor)}</td>
+          <td class="py-2.5 px-3 text-right whitespace-nowrap">
+            <button onclick="editImovelItem('entradaItens', '${item.id}')" class="p-1 text-slate-400 hover:text-emerald-600"><i class="ph-bold ph-pencil-simple"></i></button>
+            <button onclick="deleteImovelItem('entradaItens', '${item.id}')" class="p-1 text-slate-400 hover:text-rose-600"><i class="ph-bold ph-trash"></i></button>
+          </td>
+        </tr>
+      `).join('');
+      document.getElementById('tfootEntradaValor').textContent = formatBRL(somaEntrada);
+
+      // 4. Outros Gastos na Compra
+      const tbodyOC = document.getElementById('tbodyOutrosCompra');
+      tbodyOC.innerHTML = appState.outrosGastosCompra.map(item => `
+        <tr class="hover:bg-slate-50 dark:hover:bg-slate-800/50 transition">
+          <td class="py-2.5 px-4 font-medium">${item.descricao}</td>
+          <td class="py-2.5 px-4 text-xs text-slate-500 whitespace-nowrap">${formatDateBR(item.data)}</td>
+          <td class="py-2.5 px-4 text-right font-bold whitespace-nowrap">${formatBRL(item.valor)}</td>
+          <td class="py-2.5 px-4 text-right whitespace-nowrap">
+            <button onclick="editImovelItem('outrosGastosCompra', '${item.id}')" class="p-1 text-slate-400 hover:text-amber-600"><i class="ph-bold ph-pencil-simple"></i></button>
+            <button onclick="deleteImovelItem('outrosGastosCompra', '${item.id}')" class="p-1 text-slate-400 hover:text-rose-600"><i class="ph-bold ph-trash"></i></button>
+          </td>
+        </tr>
+      `).join('');
+      document.getElementById('tfootOutrosCompraValor').textContent = formatBRL(somaOutrosCompra);
+
+      // 5. Reformas e Melhorias (Planilha 1)
+      const tbodyR = document.getElementById('tbodyReformas');
+      tbodyR.innerHTML = appState.reformasMelhorias.map(item => `
+        <tr class="hover:bg-slate-50 dark:hover:bg-slate-800/50 transition">
+          <td class="py-3 px-4 font-medium">${item.descricao}</td>
+          <td class="py-3 px-4 text-xs text-slate-500 whitespace-nowrap">${formatDateBR(item.data)}</td>
+          <td class="py-3 px-4 text-right font-bold text-purple-700 dark:text-purple-300 whitespace-nowrap">${formatBRL(item.valor)}</td>
+          <td class="py-3 px-4 text-right whitespace-nowrap">
+            <button onclick="editImovelItem('reformasMelhorias', '${item.id}')" class="p-1.5 text-slate-400 hover:text-purple-600"><i class="ph-bold ph-pencil-simple"></i></button>
+            <button onclick="deleteImovelItem('reformasMelhorias', '${item.id}')" class="p-1.5 text-slate-400 hover:text-rose-600"><i class="ph-bold ph-trash"></i></button>
+          </td>
+        </tr>
+      `).join('');
+      document.getElementById('tfootReformasValor').textContent = formatBRL(somaReformas);
+    }
+
+    // =====================================================================
+    // RENDERIZAÇÃO DA PARTE 2: MÓVEIS, ELETRÔNICOS E ELETRODOMÉSTICOS
+    // =====================================================================
+    function renderMoveisSection() {
+      const lista = appState.moveisEletros || [];
+      const itensUso = lista.filter(i => i.destino !== 'fica');
+      const itensFica = lista.filter(i => i.destino === 'fica');
+
+      const somaUso = itensUso.reduce((acc, i) => acc + (Number(i.valor) || 0), 0);
+      const somaFica = itensFica.reduce((acc, i) => acc + (Number(i.valor) || 0), 0);
+      const somaTotal = somaUso + somaFica;
+
+      document.getElementById('kpiMoveisUsoValor').textContent = formatBRL(somaUso);
+      document.getElementById('kpiMoveisUsoQtd').textContent = itensUso.length;
+
+      document.getElementById('kpiMoveisFicaValor').textContent = formatBRL(somaFica);
+      document.getElementById('kpiMoveisFicaQtd').textContent = itensFica.length;
+
+      document.getElementById('kpiMoveisTotalValor').textContent = formatBRL(somaTotal);
+      document.getElementById('kpiMoveisTotalQtd').textContent = lista.length;
+
+      // Cards de resumo por Tipo
+      const tiposOrdem = [
+        { key: 'móvel', label: 'Móveis', icon: 'ph-couch' },
+        { key: 'eletrodoméstico', label: 'Eletrodomésticos', icon: 'ph-cooking-pot' },
+        { key: 'eletrônico', label: 'Eletrônicos', icon: 'ph-robot' },
+        { key: 'utilidade', label: 'Utilidades', icon: 'ph-toolbox' },
+        { key: 'decoração', label: 'Decoração', icon: 'ph-frame-corners' },
+        { key: 'melhoria apto', label: 'Melhoria Apto', icon: 'ph-Lightbulb' },
+        { key: 'reforma/manutenção apto', label: 'Manutenção Apto', icon: 'ph-paint-Working' }
+      ];
+
+      const summaryContainer = document.getElementById('moveisCategorySummary');
+      summaryContainer.innerHTML = tiposOrdem.map(t => {
+        const sub = lista.filter(i => (i.tipo || '').toLowerCase() === t.key);
+        const sum = sub.reduce((a, b) => a + (Number(b.valor) || 0), 0);
+        return `
+          <button onclick="quickFilterMovelTipo('${t.key}')" class="text-left bg-white dark:bg-slate-900 p-3 rounded-xl border border-slate-200 dark:border-slate-800 hover:border-indigo-400 transition shadow-sm">
+            <div class="flex items-center justify-between text-xs text-slate-400 mb-1">
+              <span class="font-bold truncate">${t.label}</span>
+              <span class="px-1.5 py-0.5 rounded bg-slate-100 dark:bg-slate-800 text-[10px] font-bold text-slate-600 dark:text-slate-300">${sub.length}</span>
+            </div>
+            <p class="text-sm font-extrabold text-slate-900 dark:text-white">${formatBRL(sum)}</p>
+          </button>
+        `;
+      }).join('');
+
+      renderMoveisTable();
+    }
+
+    function quickFilterMovelTipo(tipoKey) {
+      const sel = document.getElementById('filterMovelTipo');
+      sel.value = (sel.value === tipoKey) ? 'ALL' : tipoKey;
+      renderMoveisTable();
+    }
+
+    function renderMoveisTable() {
+      const search = (document.getElementById('filterMovelSearch').value || '').toLowerCase().trim();
+      const destinoFilter = document.getElementById('filterMovelDestino').value;
+      const tipoFilter = document.getElementById('filterMovelTipo').value;
+      const comodoFilter = document.getElementById('filterMovelComodo').value;
+
+      const filtered = (appState.moveisEletros || []).filter(item => {
+        if (destinoFilter !== 'ALL' && item.destino !== destinoFilter) return false;
+        if (tipoFilter !== 'ALL' && (item.tipo || '').toLowerCase() !== tipoFilter.toLowerCase()) return false;
+        if (comodoFilter !== 'ALL' && item.comodo !== comodoFilter) return false;
+        if (search) {
+          const hay = `${item.descricao} ${item.loja} ${item.comodo} ${item.tipo} ${item.pagamento}`.toLowerCase();
+          if (!hay.includes(search)) return false;
+        }
+        return true;
+      });
+
+      const somaFiltro = filtered.reduce((acc, i) => acc + (Number(i.valor) || 0), 0);
+      document.getElementById('filterResultCount').textContent = `Exibindo ${filtered.length} de ${appState.moveisEletros.length} itens`;
+      document.getElementById('filterResultSum').textContent = `Soma do filtro: ${formatBRL(somaFiltro)}`;
+
+      const tbody = document.getElementById('tbodyMoveis');
+      if (filtered.length === 0) {
+        tbody.innerHTML = `
+          <tr>
+            <td colspan="8" class="py-10 text-center text-slate-400 text-sm">
+              Nenhum item encontrado para os filtros selecionados.
+            </td>
+          </tr>
+        `;
+        return;
+      }
+
+      tbody.innerHTML = filtered.map(item => {
+        const isFica = item.destino === 'fica';
+        const badgeDestino = isFica
+          ? `<button onclick="toggleMovelDestino('${item.id}')" title="Clique para alternar" class="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-full text-xs font-bold bg-amber-100 text-amber-800 dark:bg-amber-950/80 dark:text-amber-300 border border-amber-300/60 dark:border-amber-800 hover:scale-105 transition">
+               <i class="ph-fill ph-house-line"></i> Fica no Apto
+             </button>`
+          : `<button onclick="toggleMovelDestino('${item.id}')" title="Clique para alternar" class="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-full text-xs font-bold bg-indigo-100 text-indigo-800 dark:bg-indigo-950/80 dark:text-indigo-300 border border-indigo-300/60 dark:border-indigo-800 hover:scale-105 transition">
+               <i class="ph-fill ph-truck"></i> Para Uso (Levar)
+             </button>`;
+
+        return `
+          <tr class="hover:bg-slate-50 dark:hover:bg-slate-800/50 transition">
+            <td class="py-3 px-4 text-xs text-slate-500 whitespace-nowrap">${formatDateBR(item.data)}</td>
+            <td class="py-3 px-4 font-semibold text-slate-900 dark:text-white">${item.descricao}</td>
+            <td class="py-3 px-3 whitespace-nowrap">${badgeDestino}</td>
+            <td class="py-3 px-3 text-xs whitespace-nowrap">
+              <span class="px-2 py-0.5 rounded-md bg-slate-100 dark:bg-slate-800 text-slate-600 dark:text-slate-300 font-medium">${item.tipo}</span>
+            </td>
+            <td class="py-3 px-3 text-xs font-medium text-slate-600 dark:text-slate-300 whitespace-nowrap">${item.comodo}</td>
+            <td class="py-3 px-3 text-xs text-slate-500 whitespace-nowrap">
+              <span class="font-medium text-slate-700 dark:text-slate-300">${item.loja || '-'}</span>
+              <span class="block text-[11px] text-slate-400">${item.pagamento} (${item.prazo})</span>
+            </td>
+            <td class="py-3 px-4 text-right whitespace-nowrap">
+              <div class="inline-flex items-center justify-end gap-1">
+                <span class="text-xs text-slate-400">R$</span>
+                <input
+                  type="number"
+                  step="0.01"
+                  value="${Number(item.valor).toFixed(2)}"
+                  onchange="updateMovelValorInline('${item.id}', this.value)"
+                  class="w-24 text-right font-bold text-sm px-2 py-1 rounded-lg bg-slate-50 dark:bg-slate-800 border border-transparent hover:border-slate-300 dark:hover:border-slate-700 focus:border-indigo-500 focus:bg-white dark:focus:bg-slate-900 focus:outline-none transition"
+                  title="Clique para editar o valor rapidamente"
+                />
+              </div>
+            </td>
+            <td class="py-3 px-4 text-right whitespace-nowrap">
+              <button onclick="openMovelModal('${item.id}')" class="p-1.5 rounded-lg text-slate-400 hover:text-indigo-600 hover:bg-slate-100 dark:hover:bg-slate-800" title="Editar Completo">
+                <i class="ph-bold ph-pencil-simple"></i>
+              </button>
+              <button onclick="deleteMovelItem('${item.id}')" class="p-1.5 rounded-lg text-slate-400 hover:text-rose-600 hover:bg-rose-50 dark:hover:bg-rose-950/50" title="Excluir">
+                <i class="ph-bold ph-trash"></i>
+              </button>
+            </td>
+          </tr>
+        `;
+      }).join('');
+    }
+
+    // Alternar com 1 clique se o item da Planilha 2 é "Para Uso (Levar)" ou "Fica no Apto"
+    function toggleMovelDestino(id) {
+      const item = appState.moveisEletros.find(i => i.id === id);
+      if (!item) return;
+      item.destino = (item.destino === 'fica') ? 'uso' : 'fica';
+      saveState(`"${item.descricao}" marcado como ${item.destino === 'fica' ? 'Fica no Apto' : 'Para Uso Pessoal'}!`);
+    }
+
+    // Edição rápida de valor direto na linha da tabela de Móveis/Eletros
+    function updateMovelValorInline(id, novoValor) {
+      const item = appState.moveisEletros.find(i => i.id === id);
+      if (!item) return;
+      const val = parseFloat(novoValor);
+      if (isNaN(val) || val < 0) return;
+      item.valor = val;
+      saveState(`Valor de "${item.descricao}" atualizado para ${formatBRL(val)}!`);
+    }
+
+    // =====================================================================
+    // RENDERIZAÇÃO DA PARTE 3: VISÃO CONSOLIDADA
+    // =====================================================================
+    function renderResumoConsolidado(somaEntrada, valorFgts, somaParcelas, somaAmortizacoes, somaOutrosCompra, somaReformas, totalPagoImovel) {
+      const listaM = appState.moveisEletros || [];
+      const somaMoveisUso = listaM.filter(i => i.destino !== 'fica').reduce((a, b) => a + (Number(b.valor) || 0), 0);
+      const somaMoveisFica = listaM.filter(i => i.destino === 'fica').reduce((a, b) => a + (Number(b.valor) || 0), 0);
+      const somaPlanilha2 = somaMoveisUso + somaMoveisFica;
+
+      const custoTotalQueFicaNoApto = totalPagoImovel + somaMoveisFica;
+      const desembolsoGeral = totalPagoImovel + somaPlanilha2;
+
+      document.getElementById('resumoTotalFicaGeral').textContent = formatBRL(custoTotalQueFicaNoApto);
+      document.getElementById('resumoItemEntradaFgts').textContent = formatBRL(somaEntrada + valorFgts);
+      document.getElementById('resumoItemParcelas').textContent = formatBRL(somaParcelas);
+      document.getElementById('resumoItemAmortizacoes').textContent = formatBRL(somaAmortizacoes);
+      document.getElementById('resumoItemDoc').textContent = formatBRL(somaOutrosCompra);
+      document.getElementById('resumoItemReforma1').textContent = formatBRL(somaReformas);
+      document.getElementById('resumoItemReforma2').textContent = formatBRL(somaMoveisFica);
+
+      document.getElementById('resumoTotalUsoPessoal').textContent = formatBRL(somaMoveisUso);
+      document.getElementById('resumoGrandeTotalGeral').textContent = formatBRL(desembolsoGeral);
+      document.getElementById('resumoSubPlanilha1').textContent = formatBRL(totalPagoImovel);
+      document.getElementById('resumoSubPlanilha2').textContent = formatBRL(somaPlanilha2);
+      document.getElementById('resumoTotalReformasAmbas').textContent = formatBRL(somaReformas + somaMoveisFica);
+
+      // Breakdown de itens de Uso Pessoal por categoria
+      const categoriasUso = ['móvel', 'eletrodoméstico', 'eletrônico', 'utilidade', 'decoração'];
+      const containerTiposUso = document.getElementById('resumoListaTiposUso');
+      containerTiposUso.innerHTML = categoriasUso.map(cat => {
+        const sub = listaM.filter(i => i.destino !== 'fica' && (i.tipo || '').toLowerCase() === cat);
+        const sum = sub.reduce((a, b) => a + (Number(b.valor) || 0), 0);
+        return `
+          <div class="flex justify-between">
+            <span class="capitalize text-slate-600 dark:text-slate-400">${cat} (${sub.length} itens):</span>
+            <strong>${formatBRL(sum)}</strong>
+          </div>
+        `;
+      }).join('');
+
+      // Breakdown por Cômodo
+      const comodos = ['Cozinha', 'Sala', 'Quarto Suite', 'Quarto Visita', 'Banheiros', 'Lavanderia', 'Area', 'APTO'];
+      const gridComodos = document.getElementById('resumoPorComodoGrid');
+      gridComodos.innerHTML = comodos.map(c => {
+        const sub = listaM.filter(i => i.comodo === c);
+        const sum = sub.reduce((a, b) => a + (Number(b.valor) || 0), 0);
+        const qtdUso = sub.filter(i => i.destino !== 'fica').length;
+        const qtdFica = sub.filter(i => i.destino === 'fica').length;
+        return `
+          <div class="p-3.5 rounded-xl bg-slate-50 dark:bg-slate-800/60 border border-slate-200/80 dark:border-slate-800">
+            <div class="flex items-center justify-between">
+              <span class="font-bold text-xs uppercase text-slate-500 dark:text-slate-400">${c}</span>
+              <span class="text-xs font-bold px-2 py-0.5 rounded-full bg-indigo-100 text-indigo-700 dark:bg-indigo-950 dark:text-indigo-300">${sub.length} itens</span>
+            </div>
+            <p class="text-base font-extrabold text-slate-900 dark:text-white mt-1">${formatBRL(sum)}</p>
+            <p class="text-[11px] text-slate-500 mt-0.5">${qtdUso} p/ uso • ${qtdFica} fica no apto</p>
+          </div>
+        `;
+      }).join('');
+    }
+
+    // =====================================================================
+    // CRUD MODAL 1: ITENS DA PLANILHA 1 (IMÓVEL)
+    // =====================================================================
+    function openItemModal(listKey) {
+      document.getElementById('imovelListKey').value = listKey;
+      document.getElementById('imovelItemId').value = '';
+      document.getElementById('imovelItemDescricao').value = '';
+      document.getElementById('imovelItemData').value = new Date().toISOString().split('T')[0];
+      document.getElementById('imovelItemQtd').value = 1;
+      document.getElementById('imovelItemValor').value = '';
+
+      const titles = {
+        parcelasPagas: 'Nova Parcela Mensal Paga',
+        amortizacoes: 'Nova Amortização de Parcelas',
+        entradaItens: 'Novo Lançamento da Entrada',
+        outrosGastosCompra: 'Novo Gasto na Compra / Documentação',
+        reformasMelhorias: 'Nova Reforma / Melhoria Fixa no Apto'
+      };
+      document.getElementById('modalImovelTitle').textContent = titles[listKey] || 'Novo Lançamento';
+
+      const needsDesc = ['entradaItens', 'outrosGastosCompra', 'reformasMelhorias'].includes(listKey);
+      const needsQtd = ['parcelasPagas', 'amortizacoes'].includes(listKey);
+
+      document.getElementById('fieldImovelDescricaoWrap').classList.toggle('hidden', !needsDesc);
+      document.getElementById('imovelItemDescricao').required = needsDesc;
+      document.getElementById('fieldImovelQtdWrap').classList.toggle('hidden', !needsQtd);
+
+      document.getElementById('modalImovelItem').classList.remove('hidden');
+    }
+
+    function editImovelItem(listKey, id) {
+      const list = appState[listKey] || [];
+      const item = list.find(i => i.id === id);
+      if (!item) return;
+
+      openItemModal(listKey);
+      document.getElementById('modalImovelTitle').textContent = 'Editar Lançamento';
+      document.getElementById('imovelItemId').value = item.id;
+      document.getElementById('imovelItemDescricao').value = item.descricao || '';
+      document.getElementById('imovelItemData').value = item.data || '';
+      document.getElementById('imovelItemQtd').value = item.qtd || 1;
+      document.getElementById('imovelItemValor').value = item.valor || 0;
+    }
+
+    function closeImovelModal() {
+      document.getElementById('modalImovelItem').classList.add('hidden');
+    }
+
+    function saveImovelItem(e) {
+      e.preventDefault();
+      const listKey = document.getElementById('imovelListKey').value;
+      const id = document.getElementById('imovelItemId').value;
+      const descricao = document.getElementById('imovelItemDescricao').value.trim();
+      const data = document.getElementById('imovelItemData').value;
+      const qtd = parseInt(document.getElementById('imovelItemQtd').value, 10) || 1;
+      const valor = parseFloat(document.getElementById('imovelItemValor').value) || 0;
+
+      if (!appState[listKey]) appState[listKey] = [];
+
+      if (id) {
+        const idx = appState[listKey].findIndex(i => i.id === id);
+        if (idx > -1) {
+          appState[listKey][idx] = { ...appState[listKey][idx], descricao, data, qtd, valor };
+        }
+      } else {
+        appState[listKey].push({
+          id: 'id_' + Date.now(),
+          descricao,
+          data,
+          qtd,
+          valor
+        });
+      }
+
+      closeImovelModal();
+      saveState('Lançamento salvo com sucesso!');
+    }
+
+    function deleteImovelItem(listKey, id) {
+      appState[listKey] = (appState[listKey] || []).filter(i => i.id !== id);
+      saveState('Item removido!');
+    }
+
+    // =====================================================================
+    // CRUD MODAL 2: MÓVEIS, ELETRÔNICOS E ELETRODOMÉSTICOS
+    // =====================================================================
+    function autoSuggestDestino() {
+      const tipo = document.getElementById('movelTipo').value;
+      const radios = document.getElementsByName('movelDestinoRadio');
+      const sugerido = (tipo === 'melhoria apto' || tipo === 'reforma/manutenção apto') ? 'fica' : 'uso';
+      radios.forEach(r => { r.checked = (r.value === sugerido); });
+    }
+
+    function openMovelModal(editId) {
+      const form = document.getElementById('formMovelItem');
+      form.reset();
+
+      if (editId) {
+        const item = appState.moveisEletros.find(i => i.id === editId);
+        if (!item) return;
+        document.getElementById('modalMovelTitle').textContent = 'Editar Item (Móveis / Eletros)';
+        document.getElementById('movelItemId').value = item.id;
+        document.getElementById('movelDescricao').value = item.descricao;
+        document.getElementById('movelData').value = item.data;
+        document.getElementById('movelTipo').value = item.tipo;
+        document.getElementById('movelComodo').value = item.comodo;
+        document.getElementById('movelValor').value = item.valor;
+        document.getElementById('movelPagamento').value = item.pagamento;
+        document.getElementById('movelPrazo').value = item.prazo;
+        document.getElementById('movelLoja').value = item.loja;
+        const radios = document.getElementsByName('movelDestinoRadio');
+        radios.forEach(r => { r.checked = (r.value === (item.destino || 'uso')); });
+      } else {
+        document.getElementById('modalMovelTitle').textContent = 'Adicionar Móvel / Eletrodoméstico';
+        document.getElementById('movelItemId').value = '';
+        document.getElementById('movelData').value = new Date().toISOString().split('T')[0];
+        document.getElementById('movelPrazo').value = 'a vista';
+      }
+
+      document.getElementById('modalMovelItem').classList.remove('hidden');
+    }
+
+    function closeMovelModal() {
+      document.getElementById('modalMovelItem').classList.add('hidden');
+    }
+
+    function saveMovelItem(e) {
+      e.preventDefault();
+      const id = document.getElementById('movelItemId').value;
+      const descricao = document.getElementById('movelDescricao').value.trim();
+      const data = document.getElementById('movelData').value;
+      const tipo = document.getElementById('movelTipo').value;
+      const comodo = document.getElementById('movelComodo').value;
+      const valor = parseFloat(document.getElementById('movelValor').value) || 0;
+      const pagamento = document.getElementById('movelPagamento').value;
+      const prazo = document.getElementById('movelPrazo').value.trim() || 'a vista';
+      const loja = document.getElementById('movelLoja').value.trim() || '-';
+
+      let destino = 'uso';
+      document.getElementsByName('movelDestinoRadio').forEach(r => {
+        if (r.checked) destino = r.value;
+      });
+
+      if (id) {
+        const idx = appState.moveisEletros.findIndex(i => i.id === id);
+        if (idx > -1) {
+          appState.moveisEletros[idx] = { id, descricao, data, tipo, comodo, valor, pagamento, prazo, loja, destino };
+        }
+      } else {
+        appState.moveisEletros.unshift({
+          id: 'm_' + Date.now(),
+          descricao, data, tipo, comodo, valor, pagamento, prazo, loja, destino
+        });
+      }
+
+      closeMovelModal();
+      saveState('Item salvo na planilha de Móveis & Eletros!');
+    }
+
+    function deleteMovelItem(id) {
+      appState.moveisEletros = appState.moveisEletros.filter(i => i.id !== id);
+      saveState('Item removido da lista de Móveis & Eletros!');
+    }
+
+    // =====================================================================
+    // CONFIGURAÇÃO DO CONTRATO
+    // =====================================================================
+    function openConfigModal() {
+      document.getElementById('cfgValorVenda').value = appState.config.valorVenda;
+      document.getElementById('cfgValorFgts').value = appState.config.valorFgts;
+      document.getElementById('cfgValorFinanciado').value = appState.config.valorFinanciado;
+      document.getElementById('cfgTotalParcelas').value = appState.config.totalParcelas;
+      document.getElementById('modalConfig').classList.remove('hidden');
+    }
+
+    function closeConfigModal() {
+      document.getElementById('modalConfig').classList.add('hidden');
+    }
+
+    function saveConfigModal(e) {
+      e.preventDefault();
+      appState.config.valorVenda = parseFloat(document.getElementById('cfgValorVenda').value) || 290000;
+      appState.config.valorFgts = parseFloat(document.getElementById('cfgValorFgts').value) || 15000;
+      appState.config.valorFinanciado = parseFloat(document.getElementById('cfgValorFinanciado').value) || 211409.32;
+      appState.config.totalParcelas = parseInt(document.getElementById('cfgTotalParcelas').value, 10) || 360;
+      closeConfigModal();
+      saveState('Dados do contrato atualizados!');
+    }
+
+    // =====================================================================
+    // NUVEM (GOOGLE SHEETS WEB APP) & BACKUP
+    // =====================================================================
+    function openCloudModal() {
+      document.getElementById('cloudWebhookUrl').value = localStorage.getItem(CLOUD_URL_KEY) || '';
+      document.getElementById('modalCloud').classList.remove('hidden');
+    }
+
+    function closeCloudModal() {
+      document.getElementById('modalCloud').classList.add('hidden');
+    }
+
+    function saveCloudUrl() {
+      const url = document.getElementById('cloudWebhookUrl').value.trim();
+      localStorage.setItem(CLOUD_URL_KEY, url);
+      showToast('URL da Nuvem salva no navegador!');
+    }
+
+    async function syncToCloud() {
+      const url = (document.getElementById('cloudWebhookUrl').value || localStorage.getItem(CLOUD_URL_KEY) || '').trim();
+      if (!url) {
+        showToast('Cole primeiro a URL do Google Apps Script!');
+        return;
+      }
+      localStorage.setItem(CLOUD_URL_KEY, url);
+      try {
+        showToast('Enviando dados para a nuvem...');
+        await fetch(url, {
+          method: 'POST',
+          mode: 'no-cors',
+          headers: { 'Content-Type': 'text/plain;charset=utf-8' },
+          body: JSON.stringify(appState)
+        });
+        document.getElementById('syncStatusBadge').innerHTML = `<span class="w-1.5 h-1.5 rounded-full bg-indigo-500"></span> Sincronizado Nuvem`;
+        showToast('Dados enviados para a Nuvem Google com sucesso!');
+      } catch (err) {
+        showToast('Erro ao sincronizar. Verifique a URL do Web App.');
+      }
+    }
+
+    async function loadFromCloud() {
+      const url = (document.getElementById('cloudWebhookUrl').value || localStorage.getItem(CLOUD_URL_KEY) || '').trim();
+      if (!url) {
+        showToast('Cole primeiro a URL do Google Apps Script!');
+        return;
+      }
+      try {
+        showToast('Carregando dados da nuvem...');
+        const res = await fetch(url);
+        const data = await res.json();
+        if (data && data.config) {
+          appState = data;
+          saveState('Dados carregados da nuvem com sucesso!');
+          closeCloudModal();
+        } else {
+          showToast('Nenhum dado encontrado na nuvem ainda.');
+        }
+      } catch (err) {
+        showToast('Não foi possível baixar da nuvem. Verifique a permissão do Script.');
+      }
+    }
+
+    function copyGasCode() {
+      const code = document.getElementById('gasCodeBlock').innerText;
+      const temp = document.createElement('textarea');
+      temp.value = code;
+      document.body.appendChild(temp);
+      temp.select();
+      document.execCommand('copy');
+      document.body.removeChild(temp);
+      showToast('Código Google Apps Script copiado!');
+    }
+
+    function openBackupModal() {
+      document.getElementById('modalBackup').classList.remove('hidden');
+    }
+
+    function closeBackupModal() {
+      document.getElementById('modalBackup').classList.add('hidden');
+    }
+
+    function exportBackupJSON() {
+      const dataStr = 'data:text/json;charset=utf-8,' + encodeURIComponent(JSON.stringify(appState, null, 2));
+      const a = document.createElement('a');
+      a.href = dataStr;
+      a.download = `backup_apto301_${new Date().toISOString().slice(0,10)}.json`;
+      a.click();
+      showToast('Backup JSON baixado!');
+    }
+
+    function importBackupJSON(event) {
+      const file = event.target.files[0];
+      if (!file) return;
+      const reader = new FileReader();
+      reader.onload = function(e) {
+        try {
+          const imported = JSON.parse(e.target.result);
+          if (imported && imported.config) {
+            appState = imported;
+            saveState('Backup importado com sucesso!');
+            closeBackupModal();
+          }
+        } catch (err) {
+          showToast('Arquivo JSON inválido!');
+        }
+      };
+      reader.readAsText(file);
+    }
+
+    function resetToFactoryDefaults() {
+      appState = getInitialDefaultData();
+      saveState('Dados originais das duas planilhas restaurados!');
+      closeBackupModal();
+    }
+
+    function exportToCSV() {
+      const rows = [
+        ['PLANILHA / SECAO', 'DESCRICAO', 'DATA', 'QTD / PRAZO', 'COMODO / TIPO', 'DESTINO', 'LOJA / PAGAMENTO', 'VALOR (R$)']
+      ];
+
+      appState.parcelasPagas.forEach((p, i) => {
+        rows.push(['1. Parcelas Pagas', `Parcela #${i+1}`, p.data, p.qtd, 'Financiamento', 'Fica no Apto', 'Caixa', p.valor]);
+      });
+      appState.amortizacoes.forEach(a => {
+        rows.push(['1. Amortizacoes', 'Amortizacao Prazo', a.data, a.qtd, 'Financiamento', 'Fica no Apto', 'Caixa', a.valor]);
+      });
+      appState.entradaItens.forEach(e => {
+        rows.push(['1. Entrada Imovel', e.descricao, e.data, '1', 'Compra', 'Fica no Apto', '-', e.valor]);
+      });
+      appState.outrosGastosCompra.forEach(o => {
+        rows.push(['1. Outros Gastos Compra', o.descricao, o.data, '1', 'Documentacao/Taxas', 'Fica no Apto', '-', o.valor]);
+      });
+      appState.reformasMelhorias.forEach(r => {
+        rows.push(['1. Reformas e Melhorias', r.descricao, r.data, '1', 'Reforma Fixa', 'Fica no Apto', '-', r.valor]);
+      });
+      appState.moveisEletros.forEach(m => {
+        rows.push([
+          '2. Moveis e Eletros',
+          m.descricao,
+          m.data,
+          m.prazo,
+          `${m.comodo} (${m.tipo})`,
+          m.destino === 'fica' ? 'Fica no Apto' : 'Uso Pessoal (Levar)',
+          `${m.loja} - ${m.pagamento}`,
+          m.valor
+        ]);
+      });
+
+      const csvContent = '\uFEFF' + rows.map(r => r.map(field => `"${String(field).replace(/"/g, '""')}"`).join(';')).join('\n');
+      const blob = new Blob([csvContent], { type: 'text/csv;charset=utf-8;' });
+      const url = URL.createObjectURL(blob);
+      const a = document.createElement('a');
+      a.href = url;
+      a.download = `Relatorio_Apto301_Moveis_${new Date().toISOString().slice(0,10)}.csv`;
+      a.click();
+      showToast('Planilha CSV gerada com sucesso!');
+    }
+
+    // Tema Claro / Escuro
+    function toggleDarkMode() {
+      const html = document.documentElement;
+      html.classList.toggle('dark');
+      const isDark = html.classList.contains('dark');
+      localStorage.setItem('APTO301_THEME', isDark ? 'dark' : 'light');
+      document.getElementById('themeIcon').className = isDark ? 'ph-bold ph-sun text-lg text-amber-400' : 'ph-bold ph-moon text-lg';
+    }
+
+    function showToast(msg) {
+      const container = document.getElementById('toastContainer');
+      document.getElementById('toastMessage').textContent = msg;
+      container.classList.remove('hidden');
+      clearTimeout(window.__toastTimer);
+      window.__toastTimer = setTimeout(() => {
+        container.classList.add('hidden');
+      }, 3200);
+    }
+
+    // Inicialização
+    window.onload = function() {
+      const savedTheme = localStorage.getItem('APTO301_THEME');
+      if (savedTheme === 'dark') {
+        document.documentElement.classList.add('dark');
+        document.getElementById('themeIcon').className = 'ph-bold ph-sun text-lg text-amber-400';
+      }
+      switchMainTab('imovel');
+      switchImovelSubTab('parcelas');
+      renderAll();
+    };
+  </script>
+</body>
+</html>
